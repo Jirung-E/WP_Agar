@@ -132,6 +132,9 @@
   <ItemGroup>
     <None Include="TODOLIST.md" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Vector2D.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
