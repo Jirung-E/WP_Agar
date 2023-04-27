@@ -1,6 +1,9 @@
 #include <windows.h>
 #include <tchar.h>
 
+//#include "Scene/Scene.h"
+#include "Scene/MainScene.h"
+#include "Scene/GameScene.h"
 
 
 void gameStart(const HWND& hWnd) {
@@ -16,6 +19,10 @@ void gameStart(const HWND& hWnd) {
 }
 
 
+MainScene main_scene;
+GameScene game_scene;
+
+
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = L"Window Class Name";
 LPCTSTR lpszWindowName = L"windows program";
@@ -26,9 +33,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	PAINTSTRUCT ps;
 
 	static bool game_start = false;
+	static Scene* current_scene = nullptr;
 
 	switch(uMsg) {
 	case WM_CREATE:
+		current_scene = &main_scene;
 		break;
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMinTrackSize = { 500, 300 };
@@ -44,11 +53,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				ClipCursor(NULL);
 			}
 			break;
+		case VK_RETURN:
+			current_scene = &game_scene;
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
 		}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-
+		if(current_scene != nullptr) {
+			current_scene->syncSize(hWnd);
+			current_scene->show(hdc);
+		}
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:

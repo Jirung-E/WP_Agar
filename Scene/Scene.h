@@ -11,15 +11,19 @@ enum SceneID {
 class Scene {
 protected:
     SceneID id;
+    int horizontal_length;
+    int vertical_length;
     RECT valid_area;
-
-//    HDC mdc;                    // 이게 맞나?
-//    HBITMAP hbitmap;            // 그릴곳이 있어야 하는데...      -> 그냥 함수 하나에서 hdc받아오면 거기서 그리기 함수 다 호출하는식으로 하자.
 
 public:
     Scene(const SceneID& id);
 
+protected:
+    void drawBackground(const HDC& hdc, const COLORREF& color) const;
+    virtual void draw(const HDC& hdc) const = 0;
+
 public:
-    virtual void show(const HDC& hdc) const = 0;
+    void show(const HDC& hdc) const;
+    void syncSize(const HWND& hWnd);
     SceneID getID() const;
 };

@@ -3,9 +3,9 @@
 #include "Scene.h"
 
 
-class MainScene : public Scene {
+class GameScene : public Scene {
 public:
-    MainScene();
+    GameScene();
 
 protected:
     void draw(const HDC& hdc) const;

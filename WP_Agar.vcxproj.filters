@@ -28,6 +28,9 @@
     <Filter Include="Util">
       <UniqueIdentifier>{be3ac4d4-8821-4716-b732-039d2b52a3e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\Game">
+      <UniqueIdentifier>{8c949d82-c7bb-4857-96c6-fffb6d4e4598}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,6 +41,12 @@
     </ClCompile>
     <ClCompile Include="Scene\MainScene.cpp">
       <Filter>Scene\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Util.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,8 +62,11 @@
     <ClInclude Include="Scene\MainScene.h">
       <Filter>Scene\Main</Filter>
     </ClInclude>
-    <ClInclude Include="Util\RectSize.h">
+    <ClInclude Include="Util\Util.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>Scene\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
