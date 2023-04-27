@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Vector2D.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\MainScene.h" />

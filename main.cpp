@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <tchar.h>
 
-//#include "Scene/Scene.h"
 #include "Scene/MainScene.h"
 #include "Scene/GameScene.h"
 
