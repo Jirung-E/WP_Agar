@@ -128,12 +128,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene\MainScene.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TODOLIST.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Vector2D.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\MainScene.h" />
+    <ClInclude Include="Util\RectSize.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

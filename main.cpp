@@ -2,6 +2,20 @@
 #include <tchar.h>
 
 
+
+void gameStart(const HWND& hWnd) {
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	POINT lt = { rect.left, rect.top };
+	ClientToScreen(hWnd, &lt);
+	rect.left += lt.x;
+	rect.top += lt.y;
+	rect.right += lt.x;
+	rect.bottom += lt.y;
+	ClipCursor(&rect);
+}
+
+
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = L"Window Class Name";
 LPCTSTR lpszWindowName = L"windows program";
@@ -11,8 +25,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
+	static bool game_start = false;
+
 	switch(uMsg) {
 	case WM_CREATE:
+		break;
+	case WM_GETMINMAXINFO:
+		((MINMAXINFO*)lParam)->ptMinTrackSize = { 500, 300 };
+		break;
+	case WM_CHAR:
+		switch(wParam) {
+		case VK_ESCAPE:
+			game_start = !game_start;
+			if(game_start) {
+				gameStart(hWnd);
+			}
+			else {
+				ClipCursor(NULL);
+			}
+			break;
+		}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
@@ -22,6 +54,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+	//case WM_QUIT:
+	//	ClipCursor(NULL);
+	//	break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

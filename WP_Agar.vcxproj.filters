@@ -19,10 +19,25 @@
     <Filter Include="Engine\Vector2D">
       <UniqueIdentifier>{f7d2ab01-1965-4227-9307-bf194970b04a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{456b4269-21b3-4581-a10c-71e1716e2ba4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Main">
+      <UniqueIdentifier>{b8dbc6dc-f4e8-4065-bca0-d21b2b3447a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{be3ac4d4-8821-4716-b732-039d2b52a3e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\MainScene.cpp">
+      <Filter>Scene\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +46,15 @@
   <ItemGroup>
     <ClInclude Include="Engine\Vector2D.h">
       <Filter>Engine\Vector2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\MainScene.h">
+      <Filter>Scene\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\RectSize.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

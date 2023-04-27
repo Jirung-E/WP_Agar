@@ -11,6 +11,9 @@
 아니 차라리 이놈들을 메인컴포넌트로 분리하는게 더 맞겠다.
 일단 입력이랑 출력을 분리하는게 유리한가?
 입출력이랑 내부 처리는 분리한다.
+각 장면별로 클래스를 분리한다. Scene을 상속하고, SelectScene함수로 Scene을 선택하게 한다.
+선택된 Scene은 화면에 출력된다.
+게임 시작시 모든 Scene을 만들어두고, 선택된 Scene만 화면에 출력되도록 한다.
 
 - - -
 
@@ -53,6 +56,7 @@
 #### 출력
  - 상대좌표로 한다.
  - 기본 비율이 있고, (16:9) 그 비율과 다르면 컷아웃
+ - 단, 맵 전체에 카메라를 고정할때는 확장.
 #### 게임
  - 이동 가능한 필드의 왼쪽 위를 0, 0으로 한다.
  - Board클래스를 그대로 가져오는게 좋겠다.
@@ -66,10 +70,35 @@
 
 ## 알아볼것
  - [ ] 텍스트 크기 조절
- - [ ] 화면 밖으로 마우스가 나가지 못하게
- - [ ] 마우스 숨기기
+ - [x] 화면 밖으로 마우스가 나가지 못하게
+	```cpp
+	game_start = !game_start;
+	if(game_start) {
+		RECT rect;
+		GetClientRect(hWnd, &rect);
+		POINT lt = { rect.left, rect.top };
+		ClientToScreen(hWnd, &lt);
+		rect.left += lt.x;
+		rect.top += lt.y;
+		rect.right += lt.x;
+		rect.bottom += lt.y;
+		ClipCursor(&rect);
+	}
+	else {
+		ClipCursor(NULL);
+	}
+	```
+ - [x] 마우스 숨기기
+	```cpp
+	ShowCursor(bool);
+	```
  - [ ] 소리(음악, 효과음) 출력
  - [ ] 전체화면 하는법
+ - [x] 최소크기 설정 - WM_GETMINMAXINFO
+	```cpp
+	case WM_GETMINMAXINFO:
+		((MINMAXINFO*)lParam)->ptMinTrackSize = { 500, 300 };
+	```
 
 
 
