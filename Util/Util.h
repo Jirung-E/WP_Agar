@@ -67,3 +67,5 @@ Direction& operator++(Direction& dir);
 Direction operator++(Direction& dir, int);
 Direction& operator--(Direction& dir);
 Direction operator--(Direction& dir, int);
+
+RECT& operator%=(RECT& rect, double per);

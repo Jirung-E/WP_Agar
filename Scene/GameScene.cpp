@@ -21,3 +21,8 @@ void GameScene::draw(const HDC& hdc) const {
     // Draw Score
 
 }
+
+void GameScene::update() {
+    POINT p;
+    GetCursorPos(&p);
+}

@@ -138,6 +138,19 @@ Direction operator--(Direction& dir, int) {
 	return temp;
 }
 
+
+RECT& operator%=(RECT& rect, double per) {
+	int w = rect.right - rect.left;
+	int h = rect.bottom - rect.top;
+	rect.left += w * (100 - per)/2 / 100;
+	rect.right -= w * (100 - per)/2 / 100;
+	rect.top += h * (100 - per)/2 / 100;
+	rect.right -= h * (100 - per)/2 / 100;
+
+	return rect;
+}
+
+
 Range::Range(double min, double max) : min { min }, max { max } {
 	
 }

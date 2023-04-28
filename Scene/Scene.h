@@ -2,6 +2,8 @@
 
 #include <Windows.h>
 
+#include "../Button/Button.h"
+
 
 enum SceneID {
     Main, Game, PlayerCustomize, Game_Setting
@@ -26,4 +28,5 @@ public:
     void show(const HDC& hdc) const;
     void syncSize(const HWND& hWnd);
     SceneID getID() const;
+    virtual ButtonID click(const POINT& point) const;
 };

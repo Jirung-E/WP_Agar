@@ -30,3 +30,7 @@ void Scene::syncSize(const HWND& hWnd) {
 SceneID Scene::getID() const {
     return id;
 }
+
+ButtonID Scene::click(const POINT& point) const {
+	return None;
+}

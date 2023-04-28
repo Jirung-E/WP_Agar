@@ -9,4 +9,7 @@ public:
 
 protected:
     void draw(const HDC& hdc) const;
+
+public:
+    void update();
 };

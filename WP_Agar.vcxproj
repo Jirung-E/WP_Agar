@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button\Button.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\MainScene.cpp" />
@@ -137,6 +139,7 @@
     <None Include="TODOLIST.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button\Button.h" />
     <ClInclude Include="Engine\Vector2D.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
