@@ -49,5 +49,10 @@ void GameManager::fixCursor(const HWND& hWnd) {
 }
 
 ButtonID GameManager::buttonClicked(const POINT& point) const {
-	return main_scene.click(point);;
+	switch(current_scene->getID()) {
+	case SceneID::Main:
+		return main_scene.click(point);;
+	default:
+		return None;
+	}
 }
