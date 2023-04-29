@@ -83,6 +83,10 @@ Window클래스를 만들어서 Scene과 버튼 등을 포함하게 하는것도... -> 굳이?
 ```cpp
 dist_between_center <= radius + other->radius/3
 ```
+증가하는 반지름:
+```cpp
+sqrt(pow(player.getRadius(), 2) + pow((*iter)->getRadius(), 2)) - player.getRadius()
+```
 
 - - -
 

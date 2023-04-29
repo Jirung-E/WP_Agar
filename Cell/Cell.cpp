@@ -72,3 +72,12 @@ bool Cell::collideWith(const Cell* other) {
     }
     return false;
 }
+
+
+void Cell::growUp(double radius) {
+    this->radius += radius;
+}
+
+double Cell::getRadius() const {
+    return radius;
+}

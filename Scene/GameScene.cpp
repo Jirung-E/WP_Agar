@@ -47,6 +47,7 @@ void GameScene::update(const POINT& point) {
         std::list<Feed*>::iterator next = iter;
         next++;
         if(player.collideWith(*iter)) {
+            player.growUp(sqrt(pow(player.getRadius(), 2) + pow((*iter)->getRadius(), 2)) - player.getRadius());
             delete *iter;
             feeds.erase(iter);
         }
@@ -67,9 +68,7 @@ void GameScene::randomGenFeed() {
     }
 
     for(int i=0; i<20; ++i) {
-        feeds.push_back(new Feed { 
-            Point { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1), getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) }
-        });
-        feeds.back()->color = getRandomColor();
+        feeds.push_back(new Feed { Point { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1), 
+                                           getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) } });
     }
 }

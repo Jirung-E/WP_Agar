@@ -20,4 +20,6 @@ public:
     POINT absolutePosition(const Map& map, const RECT& valid_area) const;
     void move(const Vector& vector, const Map& map);
     bool collideWith(const Cell* other);
+    void growUp(double radius);
+    double getRadius() const;
 };
