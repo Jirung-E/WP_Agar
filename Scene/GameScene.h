@@ -1,9 +1,20 @@
 #pragma once
 
 #include "Scene.h"
+#include "../Map/Map.h"
+#include "../Cell/Cell.h"
+#include "../Feed/Feed.h"
+
+#include <list>
 
 
 class GameScene : public Scene {
+private:
+    Map map;
+    Cell player;
+    //std::list<Cell*> enemies;
+    std::list<Feed*> feeds;
+
 public:
     GameScene();
 
@@ -11,5 +22,11 @@ protected:
     void draw(const HDC& hdc) const;
 
 public:
-    void update();
+    //void show(const HDC& hdc) const;  // 카메라 모드에 따라 다르게
+
+public:
+    void update(const POINT& point);
+    void setUp();
+
+    void randomGenFeed();
 };

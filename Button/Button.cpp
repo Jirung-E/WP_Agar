@@ -14,10 +14,11 @@ void Button::show(const HDC& hdc, const RECT& valid_area) const {
 }
 
 RECT Button::absoluteArea(const RECT& valid_area) const {
-    int w = valid_area.right - valid_area.left;
-    int h = valid_area.bottom - valid_area.top;
-    int x = valid_area.left + w * position.x / 100;
-    int y = valid_area.top + h * position.y / 100;
+    RECT area = rectToSquare(valid_area);
+    int w = area.right - area.left;
+    int h = area.bottom - area.top;
+    int x = area.left + w * position.x / 100;
+    int y = area.top + h * position.y / 100;
     return RECT { x, y, int(x + w * width / 100), int(y + h * height / 100) };
 }
 

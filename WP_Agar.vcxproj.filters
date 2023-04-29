@@ -16,9 +16,6 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{40811980-a210-4e7e-bcff-30794c77ef44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Vector2D">
-      <UniqueIdentifier>{f7d2ab01-1965-4227-9307-bf194970b04a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{456b4269-21b3-4581-a10c-71e1716e2ba4}</UniqueIdentifier>
     </Filter>
@@ -34,6 +31,24 @@
     <Filter Include="Button">
       <UniqueIdentifier>{251818d7-79c9-400a-97a9-25156e2d579d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cell">
+      <UniqueIdentifier>{b3ef913c-4e56-431c-9ed1-f0c656c23f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Vector">
+      <UniqueIdentifier>{37881848-674f-4859-a296-bd8916fe8b0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{4d922612-c4e6-41c5-85fe-87ccba1a2203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Object">
+      <UniqueIdentifier>{0a201f84-0a07-468d-bdb7-a4933ed12423}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Point">
+      <UniqueIdentifier>{14073bf2-8c68-410d-bb0c-be36c3cba924}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feed">
+      <UniqueIdentifier>{b8b0c943-bce5-441a-be0f-3f1cbb8e4823}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,23 +63,38 @@
     <ClCompile Include="Util\Util.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\GameScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Button\Button.cpp">
       <Filter>Button</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Vector\Vector.cpp">
+      <Filter>Engine\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Cell\Cell.cpp">
+      <Filter>Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Object\Object.cpp">
+      <Filter>Engine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Point\Point.cpp">
+      <Filter>Engine\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="Feed\Feed.cpp">
+      <Filter>Feed</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TODOLIST.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Vector2D.h">
-      <Filter>Engine\Vector2D</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -82,6 +112,24 @@
     </ClInclude>
     <ClInclude Include="Button\Button.h">
       <Filter>Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Vector\Vector.h">
+      <Filter>Engine\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell\Cell.h">
+      <Filter>Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Map.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Object\Object.h">
+      <Filter>Engine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Point\Point.h">
+      <Filter>Engine\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="Feed\Feed.h">
+      <Filter>Feed</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

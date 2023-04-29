@@ -11,11 +11,7 @@ MainScene::MainScene() : Scene { Main }, start_button { L"Start", { 25, 40 }, 50
 
 
 void MainScene::draw(const HDC& hdc) const {
-    HBRUSH br = CreateSolidBrush(Black);
-    HBRUSH old = (HBRUSH)SelectObject(hdc, br);
-    Rectangle(hdc, valid_area.left, valid_area.top, valid_area.right, valid_area.bottom);
-    SelectObject(hdc, old);
-    DeleteObject(br);
+    drawBackground(hdc, White);
 
     // Draw Start Button
     start_button.show(hdc, valid_area);

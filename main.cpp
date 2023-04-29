@@ -17,27 +17,46 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	switch(uMsg) {
 	case WM_CREATE:
+		manager.setTimers(hWnd);
+		break;
+	case WM_TIMER:
+		manager.timer(hWnd, wParam);
 		break;
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMinTrackSize = { 500, 300 };
 		break;
 	case WM_LBUTTONDOWN:
 		manager.clickScene(hWnd, { LOWORD(lParam), HIWORD(lParam) });
+		InvalidateRect(hWnd, NULL, FALSE);
+		break;
+	case WM_MOUSEMOVE:
 		break;
 	case WM_CHAR:
-		switch(wParam) {
-		case VK_ESCAPE:
-			
-			break;
-		case VK_RETURN:
-			InvalidateRect(hWnd, NULL, TRUE);
-			break;
-		}
+		manager.keyboardInput(hWnd, wParam);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		manager.syncSize(hWnd);
-		manager.show(hdc);
+		{
+			RECT rt;
+			GetClientRect(hWnd, &rt);
+
+			HDC mdc = CreateCompatibleDC(hdc);
+			HBITMAP hbitmap = CreateCompatibleBitmap(hdc, rt.right, rt.bottom);
+			SelectObject(mdc, hbitmap);
+
+			////////////////////////
+			Rectangle(mdc, 0, 0, rt.right, rt.bottom);
+
+			////////////////////////
+			manager.syncSize(hWnd);
+			manager.show(mdc);
+			////////////////////////
+
+			BitBlt(hdc, 0, 0, rt.right, rt.bottom, mdc, 0, 0, SRCCOPY);
+
+			DeleteDC(mdc);
+			DeleteObject(hbitmap);
+		}
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:

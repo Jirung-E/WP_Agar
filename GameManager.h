@@ -12,6 +12,10 @@ private:
     Scene* current_scene;
     POINT mouse_position;
 
+    enum Timer {
+        Display, MovePlayer, GenerateFeeds, GenerateEnemy
+    };
+
 public:
     GameManager();
     ~GameManager();
@@ -20,11 +24,22 @@ public:
     void show(const HDC& hdc) const;
     void syncSize(const HWND& hWnd);
 
+    void keyboardInput(const HWND& hWnd, int keycode);
+
     void clickScene(const HWND& hWnd, const POINT& point);
+    void update(const HWND& hWnd);
+
+    void quit(const HWND& hWnd);
+
+    void setTimers(const HWND& hWnd);
+    void timer(const HWND& hWnd, int id);
 
 private:
-    void gameStart();
+    void gameStart(const HWND& hWnd);
     void fixCursor(const HWND& hWnd);
+    void releaseCursor();
 
     ButtonID buttonClicked(const POINT& point) const;
+
+    void syncMousePosition(const HWND& hWnd);
 };

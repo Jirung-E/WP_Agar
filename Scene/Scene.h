@@ -25,7 +25,7 @@ protected:
     virtual void draw(const HDC& hdc) const = 0;
 
 public:
-    void show(const HDC& hdc) const;
+    virtual void show(const HDC& hdc) const;
     void syncSize(const HWND& hWnd);
     SceneID getID() const;
     virtual ButtonID click(const POINT& point) const;

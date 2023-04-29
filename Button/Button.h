@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Util/Util.h"
-#include "../Engine/Point.h"
+#include "../Engine/Point/Point.h"
 
 
 enum ButtonID {
