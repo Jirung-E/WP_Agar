@@ -46,7 +46,7 @@
     <Filter Include="Engine\Point">
       <UniqueIdentifier>{14073bf2-8c68-410d-bb0c-be36c3cba924}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Feed">
+    <Filter Include="Cell\Feed">
       <UniqueIdentifier>{b8b0c943-bce5-441a-be0f-3f1cbb8e4823}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -78,17 +78,17 @@
     <ClCompile Include="Map\Map.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Cell\Cell.cpp">
-      <Filter>Cell</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Object\Object.cpp">
       <Filter>Engine\Object</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Point\Point.cpp">
       <Filter>Engine\Point</Filter>
     </ClCompile>
-    <ClCompile Include="Feed\Feed.cpp">
-      <Filter>Feed</Filter>
+    <ClCompile Include="Cell\Cell.cpp">
+      <Filter>Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="Cell\Feed\Feed.cpp">
+      <Filter>Cell\Feed</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +116,6 @@
     <ClInclude Include="Engine\Vector\Vector.h">
       <Filter>Engine\Vector</Filter>
     </ClInclude>
-    <ClInclude Include="Cell\Cell.h">
-      <Filter>Cell</Filter>
-    </ClInclude>
     <ClInclude Include="Map\Map.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -128,8 +125,11 @@
     <ClInclude Include="Engine\Point\Point.h">
       <Filter>Engine\Point</Filter>
     </ClInclude>
-    <ClInclude Include="Feed\Feed.h">
-      <Filter>Feed</Filter>
+    <ClInclude Include="Cell\Cell.h">
+      <Filter>Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell\Feed\Feed.h">
+      <Filter>Cell\Feed</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

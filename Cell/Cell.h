@@ -11,6 +11,9 @@ public:
 
 protected:
     double radius;
+    double target_radius;
+    double prev_radius;
+    int trans_count;
 
 public:
     Cell(const Point& position);
@@ -20,6 +23,7 @@ public:
     POINT absolutePosition(const Map& map, const RECT& valid_area) const;
     void move(const Vector& vector, const Map& map);
     bool collideWith(const Cell* other);
-    void growUp(double radius);
+    void eat(Cell* cell);
+    void growUp();
     double getRadius() const;
 };

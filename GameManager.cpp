@@ -67,7 +67,7 @@ void GameManager::quit(const HWND& hWnd) {
 
 void GameManager::setTimers(const HWND& hWnd) {
 	SetTimer(hWnd, Display, fps(60), NULL);
-	SetTimer(hWnd, MovePlayer, fps(60), NULL);
+	SetTimer(hWnd, UpdateGame, fps(60), NULL);
 }
 
 void GameManager::timer(const HWND& hWnd, int id) {
@@ -75,7 +75,7 @@ void GameManager::timer(const HWND& hWnd, int id) {
 	case Display:
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
-	case MovePlayer:
+	case UpdateGame:
 		update(hWnd);
 		break;
 	case GenerateFeeds:

@@ -129,10 +129,10 @@
   <ItemGroup>
     <ClCompile Include="Button\Button.cpp" />
     <ClCompile Include="Cell\Cell.cpp" />
+    <ClCompile Include="Cell\Feed\Feed.cpp" />
     <ClCompile Include="Engine\Object\Object.cpp" />
     <ClCompile Include="Engine\Point\Point.cpp" />
     <ClCompile Include="Engine\Vector\Vector.cpp" />
-    <ClCompile Include="Feed\Feed.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map\Map.cpp" />
@@ -147,10 +147,10 @@
   <ItemGroup>
     <ClInclude Include="Button\Button.h" />
     <ClInclude Include="Cell\Cell.h" />
+    <ClInclude Include="Cell\Feed\Feed.h" />
     <ClInclude Include="Engine\Object\Object.h" />
     <ClInclude Include="Engine\Point\Point.h" />
     <ClInclude Include="Engine\Vector\Vector.h" />
-    <ClInclude Include="Feed\Feed.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Scene\GameScene.h" />

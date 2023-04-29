@@ -1,7 +1,8 @@
 #include "Cell.h"
 
 
-Cell::Cell(const Point& position) : Object { position }, radius { 0.3 }, color { White } {
+Cell::Cell(const Point& position) : Object { position }, radius { 0.3 }, color { White }, 
+target_radius { radius }, prev_radius { radius }, trans_count { 0 } {
 
 }
 
@@ -73,9 +74,17 @@ bool Cell::collideWith(const Cell* other) {
     return false;
 }
 
+void Cell::eat(Cell* cell) {
+    target_radius = sqrt(pow(target_radius, 2) + pow(cell->radius, 2));
+    prev_radius = radius;
+    trans_count = 0;
+}
 
-void Cell::growUp(double radius) {
-    this->radius += radius;
+void Cell::growUp() {
+    if(trans_count > 30) {
+        return;
+    }
+    radius = -(target_radius-prev_radius)*pow(trans_count++/30.0-1, 2) + target_radius;
 }
 
 double Cell::getRadius() const {

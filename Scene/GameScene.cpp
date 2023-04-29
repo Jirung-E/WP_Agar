@@ -31,6 +31,10 @@ void GameScene::draw(const HDC& hdc) const {
     ss << player.position.x << L"         " << player.position.y;
     text = ss.str();
     TextOut(hdc, 0, 0, text.c_str(), text.length());
+    ss.str(L"");
+    ss << player.getRadius();
+    text = ss.str();
+    TextOut(hdc, 0, 16, text.c_str(), text.length());
 
     // Draw Score
 
@@ -41,13 +45,14 @@ void GameScene::update(const POINT& point) {
     POINT p = player.absolutePosition(map, valid_area);
     Vector v = (Point { (double)point.x, (double)point.y } - Point { (double)p.x, (double)p.y }) / 50;
     player.move(v, map);
+    player.growUp();
 
     std::list<Feed*>::iterator iter = feeds.begin();
     for(int i=0; i<feeds.size(); ++i) {
         std::list<Feed*>::iterator next = iter;
         next++;
         if(player.collideWith(*iter)) {
-            player.growUp(sqrt(pow(player.getRadius(), 2) + pow((*iter)->getRadius(), 2)) - player.getRadius());
+            player.eat(*iter);
             delete *iter;
             feeds.erase(iter);
         }

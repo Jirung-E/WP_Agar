@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Cell/Cell.h"
+#include "../Cell.h"
 
 
 class Feed : public Cell {

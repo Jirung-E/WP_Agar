@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include "../Map/Map.h"
 #include "../Cell/Cell.h"
-#include "../Feed/Feed.h"
+#include "../Cell/Feed/Feed.h"
 
 #include <list>
 
@@ -22,7 +22,7 @@ protected:
     void draw(const HDC& hdc) const;
 
 public:
-    //void show(const HDC& hdc) const;  // Ä«¸Ş¶ó ¸ğµå¿¡ µû¶ó ´Ù¸£°Ô
+    //void show(const HDC& hdc) const;  // ì¹´ë©”ë¼ ëª¨ë“œì— ë”°ë¼ ë‹¤ë¥´ê²Œ
 
 public:
     void update(const POINT& point);

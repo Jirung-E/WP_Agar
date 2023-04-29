@@ -13,7 +13,7 @@ private:
     POINT mouse_position;
 
     enum Timer {
-        Display, MovePlayer, GenerateFeeds, GenerateEnemy
+        Display, UpdateGame, GenerateFeeds, GenerateEnemy
     };
 
 public:
