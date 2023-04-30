@@ -56,6 +56,8 @@ void GameManager::quit(const HWND& hWnd) {
 	case Game:
 		current_scene = &main_scene;
 		KillTimer(hWnd, GenerateFeeds);
+		KillTimer(hWnd, GenerateEnemy);
+		KillTimer(hWnd, RandomMove);
 		releaseCursor();
 		break;
 	case Main:
@@ -81,6 +83,11 @@ void GameManager::timer(const HWND& hWnd, int id) {
 	case GenerateFeeds:
 		game_scene.randomGenFeed();
 		break;
+	case GenerateEnemy:
+		game_scene.randomGenEnemy();
+		break;
+	case RandomMove:
+		game_scene.enemyRandomMove();
 	}
 }
 
@@ -88,9 +95,13 @@ void GameManager::timer(const HWND& hWnd, int id) {
 void GameManager::gameStart(const HWND& hWnd) {
 	game_scene.setUp();
     current_scene = &game_scene;
-	SetTimer(hWnd, GenerateFeeds, 10000, NULL);
+	SetTimer(hWnd, GenerateFeeds, 2000, NULL);
+	SetTimer(hWnd, GenerateEnemy, 5000, NULL);
+	SetTimer(hWnd, RandomMove, 500, NULL);
 	game_scene.randomGenFeed();
 	game_scene.randomGenFeed();
+	game_scene.randomGenEnemy();
+	game_scene.randomGenEnemy();
 }
 
 void GameManager::fixCursor(const HWND& hWnd) {

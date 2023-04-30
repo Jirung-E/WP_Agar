@@ -12,7 +12,7 @@ class GameScene : public Scene {
 private:
     Map map;
     Cell player;
-    //std::list<Cell*> enemies;
+    std::list<Cell*> enemies;
     std::list<Feed*> feeds;
 
 public:
@@ -29,4 +29,7 @@ public:
     void setUp();
 
     void randomGenFeed();
+    void randomGenEnemy();
+    
+    void enemyRandomMove();
 };

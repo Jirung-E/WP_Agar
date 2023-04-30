@@ -2,7 +2,7 @@
 
 
 Cell::Cell(const Point& position) : Object { position }, radius { 0.3 }, color { White }, 
-target_radius { radius }, prev_radius { radius }, trans_count { 0 } {
+target_radius { radius }, prev_radius { radius }, trans_count { 0 }, stroll_count { 5 } {
 
 }
 
@@ -46,6 +46,10 @@ void Cell::move(const Vector& vector, const Map& map) {
         velocity = { 0, 0 };
     }
     velocity = velocity/10;
+    move(map);
+}
+
+void Cell::move(const Map& map) {
     position += velocity;
 
     if(position.x - radius <= 0) {
@@ -66,6 +70,22 @@ void Cell::move(const Vector& vector, const Map& map) {
     }
 }
 
+void Cell::randomStroll() {
+    if(stroll_count++ < 5) {
+        return;
+    }
+    velocity = Vector { getRandomNumberOf(Range { -1, 1 }, 0.1), getRandomNumberOf(Range { -1, 1 }, 0.1) };
+    if(velocity.scalar() > 1) {
+        velocity = velocity.unit();
+    }
+    else if(velocity.scalar() <= 0.1) {
+        velocity = { 0, 0 };
+    }
+    velocity = velocity/10;
+    stroll_count = 0;
+}
+
+
 bool Cell::collideWith(const Cell* other) {
     double dist_between_center = Vector(other->position - position).scalar();
     if(dist_between_center <= radius + other->radius/3) {
@@ -81,10 +101,10 @@ void Cell::eat(Cell* cell) {
 }
 
 void Cell::growUp() {
-    if(trans_count > 30) {
+    if(trans_count > 60) {
         return;
     }
-    radius = -(target_radius-prev_radius)*pow(trans_count++/30.0-1, 2) + target_radius;
+    radius = -(target_radius-prev_radius)*pow(trans_count++/60.0-1, 4) + target_radius;
 }
 
 double Cell::getRadius() const {

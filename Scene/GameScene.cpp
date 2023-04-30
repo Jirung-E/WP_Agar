@@ -22,7 +22,9 @@ void GameScene::draw(const HDC& hdc) const {
     }
 
     // Draw Enemy
-
+    for(auto e : enemies) {
+        e->draw(hdc, map, valid_area);
+    }
 
     // Draw Player
     player.draw(hdc, map, valid_area);
@@ -47,6 +49,12 @@ void GameScene::update(const POINT& point) {
     player.move(v, map);
     player.growUp();
 
+    for(auto& e : enemies) {
+        e->move(map);
+        e->growUp();
+    }
+
+    // 먹이를 먹음
     std::list<Feed*>::iterator iter = feeds.begin();
     for(int i=0; i<feeds.size(); ++i) {
         std::list<Feed*>::iterator next = iter;
@@ -57,6 +65,76 @@ void GameScene::update(const POINT& point) {
             feeds.erase(iter);
         }
         iter = next;
+    }
+
+    // 적과 충돌
+    std::list<Cell*>::iterator e_iter = enemies.begin();
+    for(int i=0; i<enemies.size(); ++i) {
+        std::list<Cell*>::iterator next = e_iter;
+        next++;
+        if(player.collideWith(*e_iter)) {
+            player.eat(*e_iter);
+            delete *e_iter;
+            enemies.erase(e_iter);
+        }
+        e_iter = next;
+    }
+
+    // 적이 먹이를 먹음
+    for(auto& e : enemies) {
+        iter = feeds.begin();
+        for(int i=0; i<feeds.size(); ++i) {
+            std::list<Feed*>::iterator next = iter;
+            next++;
+            if(e->collideWith(*iter)) {
+                e->eat(*iter);
+                delete *iter;
+                feeds.erase(iter);
+            }
+            iter = next;
+        }
+    }
+
+    // 적이 적과 충돌
+    e_iter = enemies.begin();
+    for(int i=0; i<enemies.size(); ++i) {
+        std::list<Cell*>::iterator other_iter = enemies.begin();
+        bool e_iter_deleted = false;
+        for(int k=0; k<enemies.size(); ++k) {
+            if(other_iter == e_iter) {
+                continue;
+            }
+            bool other_iter_deleted = false;
+            if((*e_iter)->collideWith(*other_iter)) {
+                if((*e_iter)->getRadius() > (*other_iter)->getRadius()) {
+                    std::list<Cell*>::iterator other_next = other_iter;
+                    other_next++;
+                    (*e_iter)->eat(*other_iter);
+                    delete *other_iter;
+                    enemies.erase(other_iter);
+                    other_iter = other_next;
+                    other_iter_deleted = true;
+                }
+                else if((*e_iter)->getRadius() < (*other_iter)->getRadius()) {
+                    std::list<Cell*>::iterator e_next = e_iter;
+                    e_next++;
+                    (*other_iter)->eat(*e_iter);
+                    delete *e_iter;
+                    enemies.erase(e_iter);
+                    e_iter = e_next;
+                    e_iter_deleted = true;
+                    break;
+                }
+            }
+            if(!other_iter_deleted) {
+                other_iter++;
+            }
+            other_iter_deleted = false;
+        }
+        if(!e_iter_deleted) {
+            e_iter++;
+        }
+        e_iter_deleted = false;
     }
 }
 
@@ -72,8 +150,29 @@ void GameScene::randomGenFeed() {
         return;
     }
 
-    for(int i=0; i<20; ++i) {
+    for(int i=0; i<10; ++i) {
         feeds.push_back(new Feed { Point { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1), 
                                            getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) } });
+    }
+}
+
+void GameScene::randomGenEnemy() {
+    if(enemies.size() > 10) {
+        return;
+    }
+
+    for(int i=0; i<3; ++i) {
+        enemies.push_back(new Cell { Point { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1),
+                                             getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) } });
+        enemies.back()->color = getRandomColor();
+    }
+
+    enemyRandomMove();
+}
+
+
+void GameScene::enemyRandomMove() {
+    for(auto& e : enemies) {
+        e->randomStroll();
     }
 }
