@@ -7,6 +7,7 @@ public:
     double y;
 
 public:
+    Vector operator-();
     Vector& operator+=(const Vector& other);
     Vector& operator-=(const Vector& other);
     Vector operator*(const double& n) const;

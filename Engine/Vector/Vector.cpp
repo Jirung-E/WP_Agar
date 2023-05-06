@@ -3,6 +3,10 @@
 #include <math.h>
 
 
+Vector Vector::operator-() {
+    return { -x, -y };
+}
+
 Vector& Vector::operator+=(const Vector& other) {
     this->x += other.x;
     this->y += other.y;

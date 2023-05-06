@@ -68,63 +68,59 @@ void GameScene::updatePlayer(const POINT& point) {
 void GameScene::updateEnemy() {
     for(auto& e : enemies) {
         e->growUp();
-        // 진동문제 - 인식 범위를 넘나들면서, 도망갔다가 먹이를 쫓았다가 하면서 진동함
-        // 해결방법: 
-        // Cell에 변수 추가 - enemy_detected
-        // true일때는 먹이를 쫒지 않음
-        // (외곽선(중심점에서부터 반지름만큼+)기준)
-        // 주변 2칸 이내에 적이 없을시 false가 됨
-        // 주변 1.5칸 이내에 적이 있을시 true가 됨
 
-        // 우선순위가 있음
-        // 1. 도망
-        // 2. 추격
-        // 3. 먹이먹기
-        // 변수가 따로 있어야함.
-
-        // 인식범위가 다름
-        // 도망: 예) 1.5칸에서 인식, 2칸까지 도망
-        // 추격: 1.5칸에서 인식, 1.5칸 이하일때만 추격     -> 이렇게 안하면 추격상태일때 인식범위가 넓어져버릴수도 있음. 그렇다고 추격대상 저장하면 대상 없어져버리면 터짐
-        // 먹이먹기: 범위제한 없음
         std::list<Cell*> detected_cells;
-        double running_range = 2.0;
-        double detect_range = 1.5;
+        const double running_range = 2;
+        const double detect_range = 1.5;
+        double range = e->running ? running_range : detect_range;
+
         // 범위 안의 적을 다 구함
-        if((player.position - e->position).scalar() - player.getRadius() - e->getRadius() <= running_range) {
+        if((player.position - e->position).scalar() - player.getRadius() - e->getRadius() <= range) {
             detected_cells.push_back(&player);
         }
         for(auto& o : enemies) {
             if(e == o) {
                 continue;
             }
-
-            Vector to_other = o->position - e->position;
-
-            if(to_other.scalar() - o->getRadius() - e->getRadius() <= running_range) {
+            if((o->position - e->position).scalar() - o->getRadius() - e->getRadius() <= range) {
                 detected_cells.push_back(o);
             }
-
-            // 도망갈때, 가장 가까운 적이 아니라 범위 안의 모든 적에 대해서 도망을 가야함. 
-            // 거리에 따른 가중치를 줄까?
-
-            //if(o->getRadius() >= e->getRadius()) {
-            //// 도망갈때는 범위 안의 모든 적으로부터 도망
-            //    if(to_other.scalar() - o->getRadius() - e->getRadius() <= (e->running ? 2 : 1.5)) {
-            //        e->running = true;
-            //        dir -= to_other.unit();
-            //    }
-            //}
-            //else {
-            //// 추격할때는 한놈만 추격
-
-            //}
-
         }
 
-        Vector dir = { 0, 0 };
+        // 범위 안에 나보다 큰놈이 있는지
 
-        if(e->running || e->chasing) {
-            e->move(dir, map);
+        e->running = false;
+        e->chasing = false;
+        Vector dir = { 0, 0 };
+        Cell* target = nullptr;
+        double max_r = 0;
+        for(auto o : detected_cells) {
+            Vector to_me = e->position - o->position;
+            double dist = to_me.scalar() - e->getRadius() - o->getRadius();
+            if(o->getRadius() >= e->getRadius()) {
+                // 도망갈준비
+                dir += to_me / (to_me.scalar() + dist);
+                e->running = true;
+            }
+            else {
+                // 쫒아갈준비
+                if(dist <= detect_range) {
+                    if(o->getRadius() > max_r) {
+                        max_r = o->getRadius();
+                        target = o;
+                        e->chasing = true;
+                    }
+                }
+            }
+        }
+
+        // 추격할때는 나보다는 작지만 작은놈중에서는 가장 큰놈 추격
+        if(e->running) {
+            e->move(dir.unit(), map);
+            continue;
+        }
+        if(e->chasing) {
+            e->move((target->position - e->position).unit(), map);
             continue;
         }
 
