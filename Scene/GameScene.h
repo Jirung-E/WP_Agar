@@ -4,6 +4,7 @@
 #include "../Map/Map.h"
 #include "../Cell/Cell.h"
 #include "../Cell/Feed/Feed.h"
+#include "../Cell/EnemyCell/EnemyCell.h"
 
 #include <list>
 
@@ -12,7 +13,7 @@ class GameScene : public Scene {
 private:
     Map map;
     Cell player;
-    std::list<Cell*> enemies;
+    std::list<EnemyCell*> enemies;
     std::list<Feed*> feeds;
 
 public:
@@ -32,6 +33,8 @@ private:
     void updatePlayer(const POINT& point);
     void updateEnemy();
     void collisionCheck();
+    void playerCollisionCheck();
+    void enemyCollisionCheck();
 
 public:
     void randomGenFeed();

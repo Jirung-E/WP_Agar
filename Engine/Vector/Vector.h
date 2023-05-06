@@ -8,6 +8,7 @@ public:
 
 public:
     Vector& operator+=(const Vector& other);
+    Vector& operator-=(const Vector& other);
     Vector operator*(const double& n) const;
     Vector operator/(const double& n) const;
     Vector& operator/=(const double& n);

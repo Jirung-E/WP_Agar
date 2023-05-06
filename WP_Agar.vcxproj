@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Button\Button.cpp" />
     <ClCompile Include="Cell\Cell.cpp" />
+    <ClCompile Include="Cell\EnemyCell\EnemyCell.cpp" />
     <ClCompile Include="Cell\Feed\Feed.cpp" />
     <ClCompile Include="Engine\Object\Object.cpp" />
     <ClCompile Include="Engine\Point\Point.cpp" />

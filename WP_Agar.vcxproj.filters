@@ -93,6 +93,9 @@
     <ClCompile Include="Cell\Feed\Feed.cpp">
       <Filter>Cell\Feed</Filter>
     </ClCompile>
+    <ClCompile Include="Cell\EnemyCell\EnemyCell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TODOLIST.md" />

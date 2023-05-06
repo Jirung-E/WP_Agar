@@ -14,7 +14,6 @@ protected:
     double target_radius;
     double prev_radius;
     int trans_count;
-    int stroll_count;
     const double max_radius;
 
 public:
@@ -28,8 +27,8 @@ public:
 
     void move(const Vector& vector, const Map& map);
     void move(const Map& map);
-    void randomStroll();//
 
+public:
     bool collideWith(const Cell* other);
 
     void eat(Cell* cell);

@@ -2,7 +2,7 @@
 
 
 Cell::Cell(const Point& position) : Object { position }, radius { 0.3 }, color { White }, 
-target_radius { radius }, prev_radius { radius }, trans_count { 0 }, stroll_count { 5 }, max_radius { 5 } {
+target_radius { radius }, prev_radius { radius }, trans_count { 0 }, max_radius { 5 } {
 
 }
 
@@ -12,7 +12,6 @@ void Cell::setUp() {
     target_radius = radius;
     prev_radius = radius;
     trans_count = 0;
-    stroll_count = 5;
     velocity = { 0, 0 };
 }
 
@@ -78,21 +77,6 @@ void Cell::move(const Map& map) {
         position.y = map.getHeight() - radius;
         velocity.y = 0;
     }
-}
-
-void Cell::randomStroll() {
-    if(stroll_count++ < 5) {
-        return;
-    }
-    velocity = Vector { getRandomNumberOf(Range { -1, 1 }, 0.1), getRandomNumberOf(Range { -1, 1 }, 0.1) };
-    if(velocity.scalar() > 1) {
-        velocity = velocity.unit();
-    }
-    else if(velocity.scalar() <= 0.1) {
-        velocity = { 0, 0 };
-    }
-    velocity = velocity/10;
-    stroll_count = 0;
 }
 
 

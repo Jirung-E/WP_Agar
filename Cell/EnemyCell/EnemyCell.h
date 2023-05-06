@@ -4,6 +4,13 @@
 
 
 class EnemyCell : public Cell {
+private:
+    int stroll_count;
+
+public:
+    bool running;
+    bool chasing;
+
 public:
     EnemyCell(const Point& position);
 

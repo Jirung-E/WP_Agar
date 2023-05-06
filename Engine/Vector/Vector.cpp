@@ -9,6 +9,12 @@ Vector& Vector::operator+=(const Vector& other) {
     return *this;
 }
 
+Vector& Vector::operator-=(const Vector& other) {
+    this->x -= other.x;
+    this->y -= other.y;
+    return *this;
+}
+
 Vector Vector::operator*(const double& n) const {
     return Vector { x*n, y*n };
 }
