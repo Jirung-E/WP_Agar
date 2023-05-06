@@ -15,18 +15,25 @@ protected:
     double prev_radius;
     int trans_count;
     int stroll_count;
+    const double max_radius;
 
 public:
     Cell(const Point& position);
 
 public:
+    void setUp();
+
     void draw(const HDC& hdc, const Map& map, const RECT& valid_area) const;
     POINT absolutePosition(const Map& map, const RECT& valid_area) const;
+
     void move(const Vector& vector, const Map& map);
     void move(const Map& map);
-    void randomStroll();
+    void randomStroll();//
+
     bool collideWith(const Cell* other);
+
     void eat(Cell* cell);
     void growUp();
+
     double getRadius() const;
 };

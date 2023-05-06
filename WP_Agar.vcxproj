@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Button\Button.h" />
     <ClInclude Include="Cell\Cell.h" />
+    <ClInclude Include="Cell\EnemyCell\EnemyCell.h" />
     <ClInclude Include="Cell\Feed\Feed.h" />
     <ClInclude Include="Engine\Object\Object.h" />
     <ClInclude Include="Engine\Point\Point.h" />

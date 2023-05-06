@@ -49,6 +49,9 @@
     <Filter Include="Cell\Feed">
       <UniqueIdentifier>{b8b0c943-bce5-441a-be0f-3f1cbb8e4823}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cell\EnemyCell">
+      <UniqueIdentifier>{22392f43-db78-48ad-897d-326796cdcf8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="Cell\Feed\Feed.h">
       <Filter>Cell\Feed</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell\EnemyCell\EnemyCell.h">
+      <Filter>Cell\EnemyCell</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

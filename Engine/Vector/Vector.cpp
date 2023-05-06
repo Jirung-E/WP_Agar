@@ -9,8 +9,31 @@ Vector& Vector::operator+=(const Vector& other) {
     return *this;
 }
 
+Vector Vector::operator*(const double& n) const {
+    return Vector { x*n, y*n };
+}
+
 Vector Vector::operator/(const double& n) const {
     return Vector { x/n, y/n };
+}
+
+Vector& Vector::operator/=(const double& n) {
+    x /= n;
+    y /= n;
+    return *this;
+}
+
+Vector& Vector::operator*=(const double& n) {
+    x *= n;
+    y *= n;
+    return *this;
+}
+
+bool Vector::operator==(const Vector& other) const {
+    if(x == other.x && y == other.y) {
+        return true;
+    }
+    return false;
 }
 
 Vector Vector::unit() const {

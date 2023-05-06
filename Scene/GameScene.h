@@ -25,11 +25,17 @@ public:
     //void show(const HDC& hdc) const;  // 카메라 모드에 따라 다르게
 
 public:
-    void update(const POINT& point);
     void setUp();
+    void update(const POINT& point);
 
+private:
+    void updatePlayer(const POINT& point);
+    void updateEnemy();
+    void collisionCheck();
+
+public:
     void randomGenFeed();
     void randomGenEnemy();
     
-    void enemyRandomMove();
+    //void enemyRandomMove();
 };

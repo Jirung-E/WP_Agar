@@ -43,16 +43,17 @@ void GameScene::draw(const HDC& hdc) const {
 }
 
 
-void GameScene::update(const POINT& point) {
-    POINT p = player.absolutePosition(map, valid_area);
-    Vector v = (Point { (double)point.x, (double)point.y } - Point { (double)p.x, (double)p.y }) / 50;
-    player.move(v, map);
-    player.growUp();
+void GameScene::setUp() {
+    player.position = { map.getWidth()/2.0, map.getHeight()/2.0 };
+    player.setUp();
+    feeds.clear();
+    enemies.clear();
+}
 
-    for(auto& e : enemies) {
-        e->move(map);
-        e->growUp();
-    }
+
+void GameScene::update(const POINT& point) {
+    updatePlayer(point);
+    updateEnemy();
 
     // ∏‘¿Ã∏¶ ∏‘¿Ω
     std::list<Feed*>::iterator iter = feeds.begin();
@@ -73,9 +74,11 @@ void GameScene::update(const POINT& point) {
         std::list<Cell*>::iterator next = e_iter;
         next++;
         if(player.collideWith(*e_iter)) {
-            player.eat(*e_iter);
-            delete *e_iter;
-            enemies.erase(e_iter);
+            if(player.getRadius() > (*e_iter)->getRadius()) {
+                player.eat(*e_iter);
+                delete* e_iter;
+                enemies.erase(e_iter);
+            }
         }
         e_iter = next;
     }
@@ -138,10 +141,39 @@ void GameScene::update(const POINT& point) {
     }
 }
 
-void GameScene::setUp() {
-    player.position = { map.getWidth()/2.0, map.getHeight()/2.0 };
-    player.velocity = { 0, 0 };
-    feeds.clear();
+
+void GameScene::updatePlayer(const POINT& point) {
+    POINT p = player.absolutePosition(map, valid_area);
+    Vector v = (Point { (double)point.x, (double)point.y } - Point { (double)p.x, (double)p.y }) / 50;
+    player.move(v, map);
+    player.growUp();
+}
+
+void GameScene::updateEnemy() {
+    for(auto& e : enemies) {
+        Vector to_feed = { 0, 0 };
+        double max_dist = 10000000;
+        for(auto o : feeds) {
+            Vector _v = o->position - e->position;
+            if(_v.scalar() < max_dist) {
+                max_dist = _v.scalar();
+                to_feed = _v;
+            }
+        }
+        to_feed = to_feed.unit() * 10;
+        if(to_feed == Vector { 0, 0 }) {
+            e->randomStroll();
+            e->move(map);
+        }
+        else {
+            e->move(to_feed, map);
+        }
+        e->growUp();
+    }
+}
+
+void GameScene::collisionCheck() {
+
 }
 
 
@@ -150,7 +182,7 @@ void GameScene::randomGenFeed() {
         return;
     }
 
-    for(int i=0; i<10; ++i) {
+    for(int i=0; i<20; ++i) {
         feeds.push_back(new Feed { Point { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1), 
                                            getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) } });
     }
@@ -167,12 +199,12 @@ void GameScene::randomGenEnemy() {
         enemies.back()->color = getRandomColor();
     }
 
-    enemyRandomMove();
+    //enemyRandomMove();
 }
 
 
-void GameScene::enemyRandomMove() {
-    for(auto& e : enemies) {
-        e->randomStroll();
-    }
-}
+//void GameScene::enemyRandomMove() {
+//    for(auto& e : enemies) {
+//        e->randomStroll();
+//    }
+//}
