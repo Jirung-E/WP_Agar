@@ -5,7 +5,7 @@
 
 
 enum ButtonID {
-    None, StartButton
+    None, StartButton, ResumeGame, QuitGame, 
 };
 
 

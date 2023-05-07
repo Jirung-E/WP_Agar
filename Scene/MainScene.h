@@ -6,7 +6,7 @@
 
 
 class MainScene : public Scene {
-public:
+private:
     Button start_button;
 
 public:

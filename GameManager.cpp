@@ -10,7 +10,7 @@ GameManager::~GameManager() {
 }
 
 
-void GameManager::show(const HDC& hdc) const {
+void GameManager::show(const HDC& hdc) {
 	current_scene->show(hdc);
 }
 
@@ -21,9 +21,42 @@ void GameManager::syncSize(const HWND& hWnd) {
 
 
 void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
-	switch(keycode) {
-	case VK_ESCAPE:
-		quit(hWnd);
+	switch(current_scene->getID()) {
+	case Main:
+		switch(keycode) {
+		case VK_ESCAPE:
+			quit(hWnd);
+			break;
+		case L'n': case L'N':
+			if(current_scene->getID() == Main) {
+				gameStart(hWnd);
+			}
+			break;
+		}
+		break;
+	case Game:
+		switch(keycode) {
+		case VK_ESCAPE: case L'q': case L'Q':
+			quit(hWnd);
+			// gameOver()
+			break;
+		case L's': case L'S':
+			game_scene.pause();
+			break;
+		case L'1':
+			game_scene.setCameraMode(GameScene::CameraMode::Dynamic);
+			//fixCursor(hWnd);
+			break;
+		case L'2':
+			game_scene.setCameraMode(GameScene::CameraMode::Fixed);
+			break;
+		case L'p': case L'P':
+			game_scene.show_score = !game_scene.show_score;
+			break;
+		case L'r': case L'R':
+			gameStart(hWnd);
+			break;
+		}
 		break;
 	}
 }
@@ -32,9 +65,14 @@ void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 void GameManager::clickScene(const HWND& hWnd, const POINT& point) {
 	switch(buttonClicked(point)) {
 	case StartButton:
-		fixCursor(hWnd);
-		//ShowCursor(false);
 		gameStart(hWnd);
+		break;
+	case ResumeGame:
+		game_scene.resume();
+		break;
+	case QuitGame:
+		quit(hWnd);
+		break;
 	}
 }
 
@@ -57,7 +95,6 @@ void GameManager::quit(const HWND& hWnd) {
 		current_scene = &main_scene;
 		KillTimer(hWnd, GenerateFeeds);
 		KillTimer(hWnd, GenerateEnemy);
-		//KillTimer(hWnd, RandomMove);
 		releaseCursor();
 		break;
 	case Main:
@@ -86,22 +123,35 @@ void GameManager::timer(const HWND& hWnd, int id) {
 	case GenerateEnemy:
 		game_scene.randomGenEnemy();
 		break;
-	//case RandomMove:
-	//	game_scene.enemyRandomMove();
+	}
+}
+
+void GameManager::interrupt() {
+	switch(current_scene->getID()) {
+	case Game:
+		game_scene.pause();
+		break;
+	case Main:
+
+		break;
 	}
 }
 
 
 void GameManager::gameStart(const HWND& hWnd) {
+	fixCursor(hWnd);
+	//ShowCursor(false);
+
 	game_scene.setUp();
     current_scene = &game_scene;
+
 	SetTimer(hWnd, GenerateFeeds, 2000, NULL);
 	SetTimer(hWnd, GenerateEnemy, 5000, NULL);
-	//SetTimer(hWnd, RandomMove, 500, NULL);
+
 	game_scene.randomGenFeed();
 	game_scene.randomGenFeed();
 	game_scene.randomGenEnemy();
-	game_scene.randomGenEnemy();
+	//game_scene.randomGenEnemy();
 }
 
 void GameManager::fixCursor(const HWND& hWnd) {
@@ -124,7 +174,9 @@ void GameManager::releaseCursor() {
 ButtonID GameManager::buttonClicked(const POINT& point) const {
 	switch(current_scene->getID()) {
 	case SceneID::Main:
-		return main_scene.click(point);;
+		return main_scene.click(point);
+	case SceneID::Game:
+		return game_scene.click(point);
 	default:
 		return None;
 	}

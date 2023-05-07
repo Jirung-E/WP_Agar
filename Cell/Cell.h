@@ -8,13 +8,14 @@
 class Cell : public Object {
 public:
     COLORREF color;
+    const double max_radius;
+    const double min_radius;
 
 protected:
     double radius;
     double target_radius;
     double prev_radius;
     int trans_count;
-    const double max_radius;
 
 public:
     Cell(const Point& position);

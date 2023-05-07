@@ -2,13 +2,13 @@
 
 
 Cell::Cell(const Point& position) : Object { position }, radius { 0.3 }, color { White }, 
-target_radius { radius }, prev_radius { radius }, trans_count { 0 }, max_radius { 5 } {
+target_radius { radius }, prev_radius { radius }, trans_count { 0 }, max_radius { 5 }, min_radius { 0.3 } {
 
 }
 
 
 void Cell::setUp() {
-    radius = 0.3;
+    radius = min_radius;
     target_radius = radius;
     prev_radius = radius;
     trans_count = 0;
@@ -54,28 +54,27 @@ void Cell::move(const Vector& vector, const Map& map) {
     else if(velocity.scalar() <= 0.1) {
         velocity = { 0, 0 };
     }
-    velocity /= 10 * (0.7+radius);
     move(map);
 }
 
 void Cell::move(const Map& map) {
-    position += velocity;
+    position += velocity / 10 / (0.7+radius);
 
     if(position.x - radius <= 0) {
         position.x = radius;
-        velocity.x = 0;
+        //velocity.x = 0;
     }
     else if(position.x + radius >= map.getWidth()) {
         position.x = map.getWidth() - radius;
-        velocity.x = 0;
+        //velocity.x = 0;
     }
     if(position.y - radius <= 0) {
         position.y = radius;
-        velocity.y = 0;
+        //velocity.y = 0;
     }
     else if(position.y + radius >= map.getHeight()) {
         position.y = map.getHeight() - radius;
-        velocity.y = 0;
+        //velocity.y = 0;
     }
 }
 

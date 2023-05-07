@@ -7,27 +7,42 @@
 #include "../Cell/EnemyCell/EnemyCell.h"
 
 #include <list>
+#include <ctime>
 
 
 class GameScene : public Scene {
+public:
+    enum CameraMode {
+        Fixed, Dynamic
+    };
+    bool show_score;
+
 private:
     Map map;
     Cell player;
     std::list<EnemyCell*> enemies;
     std::list<Feed*> feeds;
+    Button resume_button;
+    Button quit_button;
+    bool paused;
+
+    CameraMode cam_mode;
+
+    double play_time;
+    clock_t start_time;
+    clock_t end_time;
+
+    int feed_erase_count;
 
 public:
     GameScene();
 
-protected:
-    void draw(const HDC& hdc) const;
-
-public:
-    //void show(const HDC& hdc) const;  // 카메라 모드에 따라 다르게
-
 public:
     void setUp();
     void update(const POINT& point);
+
+    void pause();
+    void resume();
 
 private:
     void updatePlayer(const POINT& point);
@@ -36,9 +51,17 @@ private:
     void playerCollisionCheck();
     void enemyCollisionCheck();
 
+protected:
+    void draw(const HDC& hdc) const;
+    RECT getViewArea() const;
+    void drawScore(const HDC& hdc) const;
+    void drawPauseScene(const HDC& hdc) const;
+
 public:
+    void setCameraMode(const CameraMode& mode);
+
     void randomGenFeed();
     void randomGenEnemy();
-    
-    //void enemyRandomMove();
+
+    ButtonID click(const POINT& point) const;
 };

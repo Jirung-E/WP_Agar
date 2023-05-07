@@ -25,6 +25,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMinTrackSize = { 500, 300 };
 		break;
+	case WM_SIZE:
+		manager.interrupt();
+		break;
 	case WM_LBUTTONDOWN:
 		manager.clickScene(hWnd, { LOWORD(lParam), HIWORD(lParam) });
 		InvalidateRect(hWnd, NULL, FALSE);

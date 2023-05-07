@@ -28,5 +28,5 @@ ButtonID MainScene::click(const POINT& point) const {
     if(PtInRect(&r, point)) {
         return start_button.id;
     }
-    return ButtonID();
+    return None;
 }

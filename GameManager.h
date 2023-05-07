@@ -21,7 +21,7 @@ public:
     ~GameManager();
 
 public:
-    void show(const HDC& hdc) const;
+    void show(const HDC& hdc);
     void syncSize(const HWND& hWnd);
 
     void keyboardInput(const HWND& hWnd, int keycode);
@@ -33,6 +33,8 @@ public:
 
     void setTimers(const HWND& hWnd);
     void timer(const HWND& hWnd, int id);
+
+    void interrupt();
 
 private:
     void gameStart(const HWND& hWnd);
