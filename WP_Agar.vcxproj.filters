@@ -28,9 +28,6 @@
     <Filter Include="Scene\Game">
       <UniqueIdentifier>{8c949d82-c7bb-4857-96c6-fffb6d4e4598}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Button">
-      <UniqueIdentifier>{251818d7-79c9-400a-97a9-25156e2d579d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Cell">
       <UniqueIdentifier>{b3ef913c-4e56-431c-9ed1-f0c656c23f0d}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,15 @@
     <Filter Include="Cell\EnemyCell">
       <UniqueIdentifier>{22392f43-db78-48ad-897d-326796cdcf8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{cc451926-49f5-4b04-bc56-6e5d5c224174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\TextBox">
+      <UniqueIdentifier>{c95b501f-4380-4056-804e-1b72442934c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Button">
+      <UniqueIdentifier>{251818d7-79c9-400a-97a9-25156e2d579d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,7 +76,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Button\Button.cpp">
-      <Filter>Button</Filter>
+      <Filter>GUI\Button</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Vector\Vector.cpp">
       <Filter>Engine\Vector</Filter>
@@ -96,6 +102,9 @@
     <ClCompile Include="Cell\EnemyCell\EnemyCell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextBox\TextBox.cpp">
+      <Filter>GUI\TextBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TODOLIST.md" />
@@ -118,7 +127,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Button\Button.h">
-      <Filter>Button</Filter>
+      <Filter>GUI\Button</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Vector\Vector.h">
       <Filter>Engine\Vector</Filter>
@@ -140,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Cell\EnemyCell\EnemyCell.h">
       <Filter>Cell\EnemyCell</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBox\TextBox.h">
+      <Filter>GUI\TextBox</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

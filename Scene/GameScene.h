@@ -25,6 +25,8 @@ private:
     Button resume_button;
     Button quit_button;
     bool paused;
+    TextBox game_over_message;
+    bool game_over;
 
     CameraMode cam_mode;
 
@@ -56,6 +58,7 @@ protected:
     RECT getViewArea() const;
     void drawScore(const HDC& hdc) const;
     void drawPauseScene(const HDC& hdc) const;
+    void drawGameOverScene(const HDC& hdc) const;
 
 public:
     void setCameraMode(const CameraMode& mode);

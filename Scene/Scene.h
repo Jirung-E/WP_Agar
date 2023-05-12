@@ -3,6 +3,7 @@
 #include <Windows.h>
 
 #include "../Button/Button.h"
+#include "../TextBox/TextBox.h"
 
 
 enum SceneID {

@@ -95,7 +95,7 @@ bool Cell::collideWith(const Cell* other) {
 }
 
 void Cell::eat(Cell* cell) {
-    target_radius = sqrt(pow(target_radius, 2) + pow(cell->radius, 2));
+    target_radius = cbrt(pow(target_radius, 3) + pow(cell->radius, 3));
     if(target_radius > max_radius) {
         target_radius = max_radius;
     }
@@ -104,10 +104,10 @@ void Cell::eat(Cell* cell) {
 }
 
 void Cell::growUp() {
-    if(trans_count > 60) {
+    if(trans_count > 30) {
         return;
     }
-    radius = -(target_radius-prev_radius)*pow(trans_count++/60.0-1, 6) + target_radius;
+    radius = -(target_radius-prev_radius)*pow(trans_count++/30.0-1, 6) + target_radius;
 }
 
 double Cell::getRadius() const {

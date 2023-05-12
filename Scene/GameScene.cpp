@@ -7,9 +7,10 @@
 #include <math.h>
 
 
-GameScene::GameScene() : Scene { Game }, map { }, 
-player { Point { map.getWidth()/2.0, map.getHeight()/2.0 } }, paused { false }, cam_mode { Fixed }, show_score { false }, 
+GameScene::GameScene() : Scene { Game }, map { },
+player { Point { map.getWidth()/2.0, map.getHeight()/2.0 } }, paused { false }, cam_mode { Fixed }, show_score { false },
 resume_button { L"Resume", { 20, 30 }, 60, 15 }, quit_button { L"Quit", { 20, 60 }, 60, 15 }, 
+game_over_message { L"Game Over", { 10, 30 }, 80, 15 }, game_over { false },
 play_time { 0 }, start_time { clock() }, end_time { clock() } {
     player.color = Green;
     resume_button.border_color = Gray;
@@ -18,6 +19,9 @@ play_time { 0 }, start_time { clock() }, end_time { clock() } {
     quit_button.border_color = Gray;
     quit_button.border_width = 3;
     quit_button.id = QuitGame;
+    game_over_message.text_color = Red;
+    game_over_message.background_color = LightGray;
+    game_over_message.bold = 4;
 }
 
 
@@ -27,6 +31,7 @@ void GameScene::setUp() {
     feeds.clear();
     enemies.clear();
     paused = false;
+    game_over = false;
     show_score = false;
     play_time = 0;
     start_time = clock();
@@ -39,22 +44,28 @@ void GameScene::update(const POINT& point) {
     if(paused) {
         return;
     }
-    end_time = clock();
-    play_time += end_time - start_time;
-    start_time = clock();
-    updatePlayer(point);
+    if(!game_over) {
+        end_time = clock();
+        play_time += end_time - start_time;
+        start_time = clock();
+        updatePlayer(point);
+    }
     updateEnemy();
     collisionCheck();
 }
 
 void GameScene::pause() {
-    paused = true;
+    if(!game_over) {
+        paused = true;
+    }
 }
 
 void GameScene::resume() {
-    paused = false;
-    end_time = clock();
-    start_time = clock();
+    if(!game_over) {
+        paused = false;
+        end_time = clock();
+        start_time = clock();
+    }
 }
 
 
@@ -83,8 +94,10 @@ void GameScene::updateEnemy() {
         double range = e->running ? running_range : detect_range;
 
         // 범위 안의 적을 다 구함
-        if((player.position - e->position).scalar() - player.getRadius() - e->getRadius() <= range) {
-            detected_cells.push_back(&player);
+        if(!game_over) {
+            if((player.position - e->position).scalar() - player.getRadius() - e->getRadius() <= range) {
+                detected_cells.push_back(&player);
+            }
         }
         for(auto& o : enemies) {
             if(e == o) {
@@ -150,7 +163,9 @@ void GameScene::updateEnemy() {
 }
 
 void GameScene::collisionCheck() {
-    playerCollisionCheck();
+    if(!game_over) {
+        playerCollisionCheck();
+    }
     enemyCollisionCheck();
 }
 
@@ -181,6 +196,7 @@ void GameScene::playerCollisionCheck() {
             }
             else if(player.getRadius() < (*e_iter)->getRadius()) {
                 // 게임오버
+                game_over = true;
             }
         }
         e_iter = next;
@@ -260,25 +276,29 @@ void GameScene::draw(const HDC& hdc) const {
     for(auto e : enemies) {
         e->draw(hdc, map, view_area);
     }
-    player.draw(hdc, map, view_area);
+    if(!game_over) {
+        player.draw(hdc, map, view_area);
+    }
 
     // 플레이어 이동방향
-    Vector v = player.velocity * (view_area.right-view_area.left)/map.getWidth() * player.getRadius()*2;
-    if(v.scalar() != 0) {
-        HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * player.getRadius() / 3, LightGray);
-        HPEN old = (HPEN)SelectObject(hdc, pen);
+    if(!game_over) {
+        Vector v = player.velocity * (view_area.right-view_area.left)/map.getWidth() * player.getRadius()*2;
+        if(v.scalar() != 0) {
+            HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * player.getRadius() / 3, LightGray);
+            HPEN old = (HPEN)SelectObject(hdc, pen);
 
-        POINT p = player.absolutePosition(map, view_area);
-        MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-        Vector v1 = { -v.x/3, -v.y/3 };
-        double th = atan(v.y/v.x);
-        if(v.x < 0) th += M_PI;
-        LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
-        MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-        LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
+            POINT p = player.absolutePosition(map, view_area);
+            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+            Vector v1 = { -v.x/3, -v.y/3 };
+            double th = atan(v.y/v.x);
+            if(v.x < 0) th += M_PI;
+            LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
+            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+            LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
 
-        SelectObject(hdc, old);
-        DeleteObject(pen);
+            SelectObject(hdc, old);
+            DeleteObject(pen);
+        }
     }
 
     if(show_score) {
@@ -287,6 +307,9 @@ void GameScene::draw(const HDC& hdc) const {
 
     if(paused) {
         drawPauseScene(hdc);
+    }
+    else if(game_over) {
+        drawGameOverScene(hdc);
     }
 }
 
@@ -321,25 +344,66 @@ RECT GameScene::getViewArea() const {
 }
 
 void GameScene::drawScore(const HDC& hdc) const {
+    TextBox score { L"", { 0, 0 }, 50, 5 };
+    score.transparent_background = true;
+    score.transparent_border = true;
+    score.align = DT_LEFT;
+    score.square = false;
+    score.bold = 4;
+    score.italic = true;
+
     tstring text;
     std::basic_stringstream<TCHAR> ss;
 
     // 반지름 출력
     ss << L"Size: " << player.getRadius() * 10;
     text = ss.str();
-    TextOut(hdc, 2, 2, text.c_str(), text.length());
+    //TextOut(hdc, 2, 2, text.c_str(), text.length());
+    score.text = ss.str();
+    score.show(hdc, valid_area);
     ss.str(L"");
 
     // 플레이 시간 출력
     ss << L"PlayTime: " << play_time/1000 << "\"";
     text = ss.str();
-    TextOut(hdc, 2, 18, text.c_str(), text.length());
+    //TextOut(hdc, 2, 18, text.c_str(), text.length());
+    score.text = ss.str();
+    score.position.y += 5;
+    score.show(hdc, valid_area);
     ss.str(L"");
 }
 
 void GameScene::drawPauseScene(const HDC& hdc) const {
     resume_button.show(hdc, valid_area);
     quit_button.show(hdc, valid_area);
+}
+
+void GameScene::drawGameOverScene(const HDC& hdc) const {
+    game_over_message.show(hdc, valid_area);
+    quit_button.show(hdc, valid_area);
+
+    TextBox score { L"", { 0, 45 }, 100, 7 };
+    score.transparent_background = true;
+    score.transparent_border = true;
+    score.bold = 4;
+
+    tstring text;
+    std::basic_stringstream<TCHAR> ss;
+
+    // 반지름 출력
+    ss << L"Size: " << player.getRadius() * 10;
+    text = ss.str();
+    score.text = ss.str();
+    score.show(hdc, valid_area);
+    ss.str(L"");
+
+    // 플레이 시간 출력
+    ss << L"PlayTime: " << play_time/1000 << "\"";
+    text = ss.str();
+    score.text = ss.str();
+    score.position.y += 7;
+    score.show(hdc, valid_area);
+    ss.str(L"");
 }
 
 
@@ -360,7 +424,9 @@ void GameScene::randomGenFeed() {
         feed_erase_count = 0;
         // 오래된거(앞에 10개) 제거
         for(int i=0; i<10; ++i) {
-            feeds.pop_front();
+            if(feeds.size() > 0) {
+                feeds.pop_front();
+            }
         }
     }
 
@@ -388,17 +454,23 @@ void GameScene::randomGenEnemy() {
 
 
 ButtonID GameScene::click(const POINT& point) const {
-    if(!paused) {
+    if(paused) {
+        RECT r = resume_button.absoluteArea(valid_area);
+        if(PtInRect(&r, point)) {
+            return resume_button.id;
+        }
+        r = quit_button.absoluteArea(valid_area);
+        if(PtInRect(&r, point)) {
+            return quit_button.id;
+        }
         return None;
     }
-
-    RECT r = resume_button.absoluteArea(valid_area);
-    if(PtInRect(&r, point)) {
-        return resume_button.id;
-    }
-    r = quit_button.absoluteArea(valid_area);
-    if(PtInRect(&r, point)) {
-        return quit_button.id;
+    if(game_over) {
+        RECT r = quit_button.absoluteArea(valid_area);
+        if(PtInRect(&r, point)) {
+            return quit_button.id;
+        }
+        return None;
     }
     return None;
 }

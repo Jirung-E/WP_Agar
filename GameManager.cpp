@@ -69,6 +69,7 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point) {
 		break;
 	case ResumeGame:
 		game_scene.resume();
+		lockUpCursor(hWnd);
 		break;
 	case QuitGame:
 		quit(hWnd);
@@ -152,6 +153,18 @@ void GameManager::gameStart(const HWND& hWnd) {
 	game_scene.randomGenFeed();
 	game_scene.randomGenEnemy();
 	//game_scene.randomGenEnemy();
+}
+
+void GameManager::lockUpCursor(const HWND& hWnd) {
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	POINT lt = { rect.left, rect.top };
+	ClientToScreen(hWnd, &lt);
+	rect.left += lt.x;
+	rect.top += lt.y;
+	rect.right += lt.x;
+	rect.bottom += lt.y;
+	ClipCursor(&rect);
 }
 
 void GameManager::fixCursor(const HWND& hWnd) {
