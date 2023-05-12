@@ -62,17 +62,28 @@ void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 }
 
 
-void GameManager::clickScene(const HWND& hWnd, const POINT& point) {
-	switch(buttonClicked(point)) {
-	case StartButton:
-		gameStart(hWnd);
+void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Direction& dir) {
+	switch(dir) {
+	case Left:
+		switch(buttonClicked(point)) {
+		case StartButton:
+			gameStart(hWnd);
+			break;
+		case ResumeGame:
+			game_scene.resume();
+			lockUpCursor(hWnd);
+			break;
+		case QuitGame:
+			quit(hWnd);
+			break;
+		}
 		break;
-	case ResumeGame:
-		game_scene.resume();
-		lockUpCursor(hWnd);
-		break;
-	case QuitGame:
-		quit(hWnd);
+	case Right:
+		switch(current_scene->getID()) {
+		case Game:
+			game_scene.clickR(point);
+			break;
+		}
 		break;
 	}
 }
@@ -184,12 +195,12 @@ void GameManager::releaseCursor() {
 	ClipCursor(NULL);
 }
 
-ButtonID GameManager::buttonClicked(const POINT& point) const {
+ButtonID GameManager::buttonClicked(const POINT& point) {
 	switch(current_scene->getID()) {
 	case SceneID::Main:
-		return main_scene.click(point);
+		return main_scene.clickL(point);
 	case SceneID::Game:
-		return game_scene.click(point);
+		return game_scene.clickL(point);
 	default:
 		return None;
 	}

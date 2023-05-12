@@ -31,6 +31,10 @@ SceneID Scene::getID() const {
     return id;
 }
 
-ButtonID Scene::click(const POINT& point) const {
+ButtonID Scene::clickL(const POINT& point) const {
+	return None;
+}
+
+ButtonID Scene::clickR(const POINT& point) const {
 	return None;
 }

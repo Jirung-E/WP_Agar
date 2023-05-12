@@ -18,7 +18,7 @@ protected:
     int trans_count;
 
 public:
-    Cell(const Point& position);
+    Cell(const Point& position, const double radius = 0.3);
 
 public:
     void setUp();
@@ -29,11 +29,12 @@ public:
     void move(const Vector& vector, const Map& map);
     void move(const Map& map);
 
-public:
     bool collideWith(const Cell* other);
 
     void eat(Cell* cell);
     void growUp();
 
     double getRadius() const;
+
+    Cell* spit();
 };

@@ -26,7 +26,7 @@ public:
 
     void keyboardInput(const HWND& hWnd, int keycode);
 
-    void clickScene(const HWND& hWnd, const POINT& point);
+    void clickScene(const HWND& hWnd, const POINT& point, const Direction& dir);
     void update(const HWND& hWnd);
 
     void quit(const HWND& hWnd);
@@ -42,7 +42,7 @@ private:
     void fixCursor(const HWND& hWnd);
     void releaseCursor();
 
-    ButtonID buttonClicked(const POINT& point) const;
+    ButtonID buttonClicked(const POINT& point);
 
     void syncMousePosition(const HWND& hWnd);
 };

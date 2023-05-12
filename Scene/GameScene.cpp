@@ -50,6 +50,7 @@ void GameScene::update(const POINT& point) {
         start_time = clock();
         updatePlayer(point);
     }
+    updateFeeds();
     updateEnemy();
     collisionCheck();
 }
@@ -162,6 +163,15 @@ void GameScene::updateEnemy() {
     }
 }
 
+void GameScene::updateFeeds() {
+    for(auto e : feeds) {
+        if(e->velocity == Vector { 0, 0 }) {
+            continue;
+        }
+        e->move(map);
+    }
+}
+
 void GameScene::collisionCheck() {
     if(!game_over) {
         playerCollisionCheck();
@@ -197,6 +207,7 @@ void GameScene::playerCollisionCheck() {
             else if(player.getRadius() < (*e_iter)->getRadius()) {
                 // 게임오버
                 game_over = true;
+                (*e_iter)->eat(&player);
             }
         }
         e_iter = next;
@@ -453,7 +464,7 @@ void GameScene::randomGenEnemy() {
 }
 
 
-ButtonID GameScene::click(const POINT& point) const {
+ButtonID GameScene::clickL(const POINT& point) {
     if(paused) {
         RECT r = resume_button.absoluteArea(valid_area);
         if(PtInRect(&r, point)) {
@@ -472,5 +483,30 @@ ButtonID GameScene::click(const POINT& point) const {
         }
         return None;
     }
+
+    // 분열
+    //player.spit();
+
+    return None;
+}
+
+ButtonID GameScene::clickR(const POINT& point) {
+    if(paused) {
+        return None;
+    }
+    if(game_over) {
+        return None;
+    }
+
+    Cell* c = player.spit();
+    if(c != nullptr) {
+        Feed* f = new Feed { c->position, c->getRadius() };
+        f->color = c->color;
+        f->position = c->position;
+        f->velocity = c->velocity;
+        feeds.push_back(f);
+        delete c;
+    }
+
     return None;
 }

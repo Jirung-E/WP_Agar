@@ -16,5 +16,6 @@ protected:
     void draw(const HDC& hdc) const;
 
 public:
-    ButtonID click(const POINT& point) const;
+    ButtonID clickL(const POINT& point) const;
+    ButtonID clickR(const POINT& point) const;
 };

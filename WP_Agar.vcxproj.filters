@@ -72,9 +72,6 @@
     <ClCompile Include="Util\Util.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Button\Button.cpp">
       <Filter>GUI\Button</Filter>
     </ClCompile>
@@ -99,11 +96,14 @@
     <ClCompile Include="Cell\Feed\Feed.cpp">
       <Filter>Cell\Feed</Filter>
     </ClCompile>
-    <ClCompile Include="Cell\EnemyCell\EnemyCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextBox\TextBox.cpp">
       <Filter>GUI\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Cell\EnemyCell\EnemyCell.cpp">
+      <Filter>Cell\EnemyCell</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

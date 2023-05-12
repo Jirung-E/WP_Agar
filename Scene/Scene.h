@@ -29,5 +29,6 @@ public:
     virtual void show(const HDC& hdc) const;
     void syncSize(const HWND& hWnd);
     SceneID getID() const;
-    virtual ButtonID click(const POINT& point) const;
+    virtual ButtonID clickL(const POINT& point) const;
+    virtual ButtonID clickR(const POINT& point) const;
 };

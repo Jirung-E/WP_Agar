@@ -36,7 +36,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		}
 		break;
 	case WM_LBUTTONDOWN:
-		manager.clickScene(hWnd, { LOWORD(lParam), HIWORD(lParam) });
+		manager.clickScene(hWnd, { LOWORD(lParam), HIWORD(lParam) }, Left);
+		InvalidateRect(hWnd, NULL, FALSE);
+		break;
+	case WM_RBUTTONDOWN:
+		manager.clickScene(hWnd, { LOWORD(lParam), HIWORD(lParam) }, Right);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 	case WM_MOUSEMOVE:

@@ -23,10 +23,15 @@ void MainScene::draw(const HDC& hdc) const {
     
 }
 
-ButtonID MainScene::click(const POINT& point) const {
+
+ButtonID MainScene::clickL(const POINT& point) const {
     RECT r = start_button.absoluteArea(valid_area);
     if(PtInRect(&r, point)) {
         return start_button.id;
     }
     return None;
+}
+
+ButtonID MainScene::clickR(const POINT& point) const {
+    return ButtonID();
 }

@@ -1,7 +1,7 @@
 #include "Cell.h"
 
 
-Cell::Cell(const Point& position) : Object { position }, radius { 0.3 }, color { White }, 
+Cell::Cell(const Point& position, const double radius) : Object { position }, radius { radius }, color { White }, 
 target_radius { radius }, prev_radius { radius }, trans_count { 0 }, max_radius { 5 }, min_radius { 0.3 } {
 
 }
@@ -95,7 +95,8 @@ bool Cell::collideWith(const Cell* other) {
 }
 
 void Cell::eat(Cell* cell) {
-    target_radius = cbrt(pow(target_radius, 3) + pow(cell->radius, 3));
+    target_radius = sqrt(pow(target_radius, 2) + pow(cell->radius, 2));
+    //target_radius = cbrt(pow(target_radius, 3) + pow(cell->radius, 3));
     if(target_radius > max_radius) {
         target_radius = max_radius;
     }
@@ -112,4 +113,20 @@ void Cell::growUp() {
 
 double Cell::getRadius() const {
     return radius;
+}
+
+Cell* Cell::spit() {
+    if(radius <= min_radius*1.5) {
+        return nullptr;
+    }
+
+    target_radius = sqrt(pow(target_radius, 2) - pow(min_radius/1.5, 2));
+    prev_radius = radius;
+    trans_count = 0;
+
+    Cell* cell = new Cell { position + velocity.unit()*(radius + min_radius/2) };
+    cell->radius = min_radius/1.5;
+    cell->velocity = velocity.unit();
+    cell->color = color;
+    return cell;
 }

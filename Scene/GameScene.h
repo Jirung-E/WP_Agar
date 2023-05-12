@@ -49,6 +49,7 @@ public:
 private:
     void updatePlayer(const POINT& point);
     void updateEnemy();
+    void updateFeeds();
     void collisionCheck();
     void playerCollisionCheck();
     void enemyCollisionCheck();
@@ -66,5 +67,6 @@ public:
     void randomGenFeed();
     void randomGenEnemy();
 
-    ButtonID click(const POINT& point) const;
+    ButtonID clickL(const POINT& point);
+    ButtonID clickR(const POINT& point);
 };
