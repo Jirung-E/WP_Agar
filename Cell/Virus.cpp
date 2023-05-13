@@ -80,6 +80,49 @@ void Virus::update() {
     }
 }
 
+void Virus::collideWith(Virus* other){
+    std::list<Cell*>::iterator e_iter = cells.begin();
+    for(int i=0; i<cells.size(); ++i) {
+        std::list<Cell*>::iterator other_iter = other->cells.begin();
+        bool e_iter_deleted = false;
+        for(int k=0; k<cells.size(); ++k) {
+            if(other_iter == e_iter) {
+                continue;
+            }
+            bool other_iter_deleted = false;
+            if((*e_iter)->collideWith(*other_iter)) {
+                if((*e_iter)->getRadius() >(*other_iter)->getRadius()) {
+                    std::list<Cell*>::iterator other_next = other_iter;
+                    other_next++;
+                    (*e_iter)->eat(*other_iter);
+                    delete* other_iter;
+                    cells.erase(other_iter);
+                    other_iter = other_next;
+                    other_iter_deleted = true;
+                }
+                else if((*e_iter)->getRadius() < (*other_iter)->getRadius()) {
+                    std::list<Cell*>::iterator e_next = e_iter;
+                    e_next++;
+                    (*other_iter)->eat(*e_iter);
+                    delete* e_iter;
+                    cells.erase(e_iter);
+                    e_iter = e_next;
+                    e_iter_deleted = true;
+                    break;
+                }
+            }
+            if(!other_iter_deleted) {
+                other_iter++;
+            }
+            other_iter_deleted = false;
+        }
+        if(!e_iter_deleted) {
+            e_iter++;
+        }
+        e_iter_deleted = false;
+    }
+}
+
 
 void Virus::growUp() {
     for(auto e : cells) {

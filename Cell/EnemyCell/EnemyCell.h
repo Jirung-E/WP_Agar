@@ -1,11 +1,12 @@
 #pragma once
 
-#include "../Cell.h"
+#include "../Virus.h"
 
 
-class EnemyCell : public Cell {
+class EnemyCell : public Virus {
 private:
     int stroll_count;
+    Vector direction;
 
 public:
     bool running;

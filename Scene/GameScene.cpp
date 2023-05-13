@@ -110,6 +110,9 @@ void GameScene::updateEnemy() {
         double range = e->running ? running_range : detect_range;
 
         // 범위 안의 적을 다 구함
+        // 가장 가까운 셀끼리 비교
+        // 가장 가까운 적 셀이 나보다 작으면 그곳으로
+        // 가장 가까운 적 셀이 나보다 크면 도망
         if(!game_over) {
             for(auto p : player.cells) {
                 if((p->position - e->position).scalar() - p->getRadius() - e->getRadius() <= range) {
@@ -227,32 +230,40 @@ void GameScene::playerCollisionCheck() {
         std::list<EnemyCell*>::iterator next = e_iter;
         next++;
 
-        std::list<Cell*>::iterator p_iter = player.cells.begin();
-        for(int i=0; i<player.cells.size(); ++i) {
-            std::list<Cell*>::iterator p_next = p_iter;
-            p_next++;
+        std::list<Cell*>::iterator c_iter = (*e_iter)->cells.begin();
+        for(int m=0; m<(*e_iter)->cells.size(); ++m) {
+            std::list<Cell*>::iterator c_next = c_iter;
+            c_next++;
 
-            if((*p_iter)->collideWith(*e_iter)) {
-                if((*p_iter)->getRadius() >(*e_iter)->getRadius()) {
-                    (*p_iter)->eat(*e_iter);
-                    delete *e_iter;
-                    enemies.erase(e_iter);
-                }
-                else if((*p_iter)->getRadius() < (*e_iter)->getRadius()) {
-                    (*e_iter)->eat(*p_iter);
-                    if(player.cells.size() > 1) {
-                        delete *p_iter;
-                        player.cells.erase(p_iter);
+            std::list<Cell*>::iterator p_iter = player.cells.begin();
+            for(int i=0; i<player.cells.size(); ++i) {
+                std::list<Cell*>::iterator p_next = p_iter;
+                p_next++;
+
+                if((*p_iter)->collideWith(*c_iter)) {
+                    if((*p_iter)->getRadius() > (*c_iter)->getRadius()) {
+                        (*p_iter)->eat(*c_iter);
+                        delete* c_iter;
+                        (*e_iter)->cells.erase(c_iter);
                     }
-                    else {
-                        // 게임오버
-                        game_over = true;
+                    else if((*p_iter)->getRadius() < (*c_iter)->getRadius()) {
+                        (*c_iter)->eat(*p_iter);
+                        if(player.cells.size() > 1) {
+                            delete* p_iter;
+                            player.cells.erase(p_iter);
+                        }
+                        else {
+                            // 게임오버
+                            game_over = true;
+                        }
                     }
+                    break;
                 }
-                break;
+
+                p_iter = p_next;
             }
 
-            p_iter = p_next;
+            c_iter = c_next;
         }
 
         e_iter = next;
@@ -261,18 +272,20 @@ void GameScene::playerCollisionCheck() {
 
 void GameScene::enemyCollisionCheck() {
     // 적이 먹이를 먹음
-    std::list<Feed*>::iterator feed_iter = feeds.begin();
+    //std::list<Feed*>::iterator feed_iter = feeds.begin();
     for(auto& e : enemies) {
-        feed_iter = feeds.begin();
-        for(int i=0; i<feeds.size(); ++i) {
-            std::list<Feed*>::iterator next = feed_iter;
-            next++;
-            if(e->collideWith(*feed_iter)) {
-                e->eat(*feed_iter);
-                delete* feed_iter;
-                feeds.erase(feed_iter);
+        for(auto o : e->cells) {
+            std::list<Feed*>::iterator feed_iter = feeds.begin();
+            for(int i=0; i<feeds.size(); ++i) {
+                std::list<Feed*>::iterator next = feed_iter;
+                next++;
+                if(o->collideWith(*feed_iter)) {
+                    o->eat(*feed_iter);
+                    delete* feed_iter;
+                    feeds.erase(feed_iter);
+                }
+                feed_iter = next;
             }
-            feed_iter = next;
         }
     }
 

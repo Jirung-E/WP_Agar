@@ -26,7 +26,7 @@ public:
 
     void update();
 
-    //bool collideWith(const Cell* other);      // 이거도 호출하는 쪽에서...
+    void collideWith(Virus* other);
 
     //void eat(Cell* cell);                     // 이것도...
     void growUp();
