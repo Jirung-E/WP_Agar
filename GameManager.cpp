@@ -135,6 +135,9 @@ void GameManager::timer(const HWND& hWnd, int id) {
 	case GenerateEnemy:
 		game_scene.randomGenEnemy();
 		break;
+	case GenerateTrap:
+		game_scene.randomGenTrap();
+		break;
 	}
 }
 
@@ -159,11 +162,7 @@ void GameManager::gameStart(const HWND& hWnd) {
 
 	SetTimer(hWnd, GenerateFeeds, 2000, NULL);
 	SetTimer(hWnd, GenerateEnemy, 5000, NULL);
-
-	game_scene.randomGenFeed();
-	game_scene.randomGenFeed();
-	game_scene.randomGenEnemy();
-	//game_scene.randomGenEnemy();
+	SetTimer(hWnd, GenerateTrap, 15000, NULL);
 }
 
 void GameManager::lockUpCursor(const HWND& hWnd) {

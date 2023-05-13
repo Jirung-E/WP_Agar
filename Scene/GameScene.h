@@ -53,6 +53,7 @@ private:
     void updatePlayer(const POINT& point);
     void updateEnemy();
     void updateFeeds();
+    void updateTraps();
     void collisionCheck();
     void playerCollisionCheck();
     void enemyCollisionCheck();

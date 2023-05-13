@@ -29,8 +29,6 @@ void GameScene::setUp() {
     player.cells.clear();
     player.cells.push_back(new Cell { Point { map.getWidth()/2.0, map.getHeight()/2.0 } });
     player.cells.front()->color = player.color;
-    //player.cells.front()->position = { map.getWidth()/2.0, map.getHeight()/2.0 };
-    //player.setUp();
     feeds.clear();
     enemies.clear();
     paused = false;
@@ -40,6 +38,13 @@ void GameScene::setUp() {
     start_time = clock();
     end_time = clock();
     feed_erase_count = 0;
+
+    randomGenFeed();
+    randomGenFeed();
+    randomGenEnemy();
+    for(int i=0; i<5; i++) {
+        randomGenTrap();
+    }
 }
 
 
@@ -55,6 +60,7 @@ void GameScene::update(const POINT& point) {
     }
     updateFeeds();
     updateEnemy();
+    updateTraps();
     collisionCheck();
 }
 
@@ -179,6 +185,12 @@ void GameScene::updateFeeds() {
         if(e->velocity == Vector { 0, 0 }) {
             continue;
         }
+        e->move(map);
+    }
+}
+
+void GameScene::updateTraps() {
+    for(auto e : traps) {
         e->move(map);
     }
 }
@@ -322,6 +334,9 @@ void GameScene::draw(const HDC& hdc) const {
     }
     if(!game_over) {
         player.draw(hdc, map, view_area);
+    }
+    for(auto e : traps) {
+        e->draw(hdc, map, view_area);
     }
 
     // 플레이어 이동방향
@@ -502,6 +517,19 @@ void GameScene::randomGenEnemy() {
                                                   getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) } });
         enemies.back()->color = getRandomColor();
     }
+}
+
+void GameScene::randomGenTrap() {
+    if(paused) {
+        return;
+    }
+
+    if(traps.size() >= (map.getWidth() + map.getHeight())/8) {
+        return;
+    }
+
+    traps.push_back(new Trap { Point { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1),
+                                       getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) } });
 }
 
 

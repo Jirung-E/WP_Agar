@@ -124,8 +124,8 @@ Cell* Cell::spit() {
         return nullptr;
     }
 
-    //target_radius = sqrt(pow(target_radius, 2) - pow(min_radius/1.5, 2));
-    //prev_radius = radius;
+    target_radius = sqrt(pow(target_radius, 2) - pow(min_radius/1.5, 2));
+    prev_radius = radius;
     trans_count = 0;
 
     Cell* cell = new Cell { position + velocity.unit()*(radius + min_radius/2), min_radius/1.5 };
