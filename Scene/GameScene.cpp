@@ -10,7 +10,7 @@
 GameScene::GameScene() : Scene { Game }, map { },
 player { Point { map.getWidth()/2.0, map.getHeight()/2.0 } }, paused { false }, cam_mode { Fixed }, show_score { false },
 resume_button { L"Resume", { 20, 30 }, 60, 15 }, quit_button { L"Quit", { 20, 60 }, 60, 15 }, 
-game_over_message { L"Game Over", { 10, 30 }, 80, 15 }, game_over { false },
+game_over_message { L"Game Over", { 10, 30 }, 80, 15 }, game_over { false }, feed_erase_count { 0 },
 play_time { 0 }, start_time { clock() }, end_time { clock() } {
     player.color = Green;
     resume_button.border_color = Gray;
@@ -74,6 +74,8 @@ void GameScene::resume() {
 
 
 void GameScene::updatePlayer(const POINT& point) {
+    RECT view_area = getViewArea();
+
     for(auto e : player.cells) {
         POINT p;
         switch(cam_mode) {
@@ -81,11 +83,13 @@ void GameScene::updatePlayer(const POINT& point) {
             p = e->absolutePosition(map, valid_area);
             break;
         case Dynamic:
-            p = { (valid_area.left + valid_area.right)/2, (valid_area.top + valid_area.bottom)/2 };
+            POINT center = { (valid_area.left + valid_area.right)/2, (valid_area.top + valid_area.bottom)/2 };
+            Vector v = (e->position - player.getCenterPoint()) * (view_area.right-view_area.left) / map.getWidth();
+            p = { LONG(center.x + v.x), LONG(center.y + v.y) };
             break;
         }
-        Vector v = (Point { (double)point.x, (double)point.y } - Point { (double)p.x, (double)p.y }) / 50;
-        e->move(v, map);
+        Vector dir = (Point { (double)point.x, (double)point.y } - Point { (double)p.x, (double)p.y }) / 50;
+        e->move(dir, map);
         e->growUp();
     }
 }
@@ -187,6 +191,8 @@ void GameScene::collisionCheck() {
 }
 
 void GameScene::playerCollisionCheck() {
+    player.update();
+
     // 먹이를 먹음
     std::list<Feed*>::iterator feed_iter = feeds.begin();
     for(int i=0; i<feeds.size(); ++i) {
@@ -321,7 +327,11 @@ void GameScene::draw(const HDC& hdc) const {
     // 플레이어 이동방향
     if(!game_over) {
         for(auto e : player.cells) {
-            Vector v = e->velocity * (view_area.right-view_area.left)/map.getWidth() * e->getRadius()*2;
+            Vector pv = e->velocity;
+            if(pv.scalar() > 1) {
+                pv = pv.unit();
+            }
+            Vector v = pv * (view_area.right-view_area.left)/map.getWidth() * e->getRadius()*2;
             if(v.scalar() != 0) {
                 HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * e->getRadius() / 3, LightGray);
                 HPEN old = (HPEN)SelectObject(hdc, pen);
@@ -361,22 +371,24 @@ RECT GameScene::getViewArea() const {
         {
             // 보이는 영역의 크기 설정
             double r0 = Cell::min_radius;
-            double rm = Cell::max_radius;
-            double w = horizontal_length/map.getWidth() * (-(4*rm-20*r0) / pow(r0-rm, 2) * pow(player.getRadius() - rm, 2) + 4*rm);
-            double W = valid_area.left + horizontal_length/2;
-            double p = W*(W/w - 1);
+            //double rm = Cell::max_radius;
+            double rm = sqrt(pow(horizontal_length/map.getWidth(), 2) + pow(vertical_length/map.getHeight(), 2))/2;
+            double w = horizontal_length/map.getWidth() * (-(rm-20*r0) / pow(r0-rm, 2) * pow(sqrt(player.getSize()) - rm, 2) + rm);
+            //double w = horizontal_length/map.getWidth() * (10*r0*pow(M_E, -(player.getRadius()-r0)) + 10*player.getRadius());
+            double W = valid_area.left + horizontal_length/2.0;
+            double A = W*(W/w - 1);
 
             // 플레이어가 중앙에 오도록 평행이동
-            Point pp = player.getCenterPoint();
-            pp += Vector { -map.getWidth()/2.0, -map.getHeight()/2.0 };
-            double px = W/w * horizontal_length/map.getWidth() * pp.x;
-            double py = W/w * horizontal_length/map.getWidth() * pp.y;
+            Point p = player.getCenterPoint();
+            p += Vector { -map.getWidth()/2.0, -map.getHeight()/2.0 };
+            double px = W/w * horizontal_length/map.getWidth() * p.x;
+            double py = W/w * horizontal_length/map.getWidth() * p.y;
 
             return {
-                LONG(floor(valid_area.left - px - p)),
-                LONG(floor(valid_area.top - py - p)),
-                LONG(floor(valid_area.right - px + p)),
-                LONG(floor(valid_area.bottom - py + p))
+                LONG(floor(valid_area.left - px - A)),
+                LONG(floor(valid_area.top - py - A)),
+                LONG(floor(valid_area.right - px + A)),
+                LONG(floor(valid_area.bottom - py + A))
             };
         }
     }
@@ -513,7 +525,6 @@ ButtonID GameScene::clickL(const POINT& point) {
         return None;
     }
 
-    // 분열
     player.split();
 
     return None;

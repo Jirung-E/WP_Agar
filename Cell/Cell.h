@@ -16,6 +16,7 @@ protected:
     double target_radius;
     double prev_radius;
     int trans_count;
+    int accel_count;
 
 public:
     Cell(const Point& position, const double radius = 0.3);

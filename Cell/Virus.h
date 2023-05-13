@@ -6,6 +6,9 @@
 
 
 class Virus {
+private:
+    int merge_count;
+
 public:
     COLORREF color;
     std::list<Cell*> cells;
@@ -21,6 +24,8 @@ public:
     void move(const Vector& vector, const Map& map);
     void move(const Map& map);
 
+    void update();
+
     //bool collideWith(const Cell* other);      // 이거도 호출하는 쪽에서...
 
     //void eat(Cell* cell);                     // 이것도...
@@ -32,8 +37,6 @@ public:
     double getSize() const;
     // 크기는 반지름 말고 넓이로 측정
     // 그럼 반지름 제한으로 cell 더 못커지게 했던거를 크기 제한으로 바꿔야함.
-
-    //Cell* spit();         // 이거는 cells를 public으로 돌리고 호출하는 쪽에서 받도록...
 
     void split();
 };

@@ -58,6 +58,9 @@
     <Filter Include="GUI\Button">
       <UniqueIdentifier>{251818d7-79c9-400a-97a9-25156e2d579d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cell\Trap">
+      <UniqueIdentifier>{e8211058-492a-43b8-b4df-08e28bf6d1d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -105,8 +108,11 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cell\Trap\Trap.cpp">
+      <Filter>Cell\Trap</Filter>
+    </ClCompile>
     <ClCompile Include="Cell\Virus.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Cell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="Cell\Virus.h">
       <Filter>Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell\Trap\Trap.h">
+      <Filter>Cell\Trap</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

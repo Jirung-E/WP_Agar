@@ -1,7 +1,7 @@
 #include "Virus.h"
 
 
-Virus::Virus(const Point& position) : color { White } {
+Virus::Virus(const Point& position) : color { White }, merge_count { 0 } {
     cells.push_back(new Cell { position });
 }
 
@@ -31,20 +31,55 @@ void Virus::move(const Map& map) {
     }
 }
 
-//bool Virus::collideWith(const Cell* other) {
-//    for(auto e : cells) {
-//        if(e->collideWith(other)) {
-//            return true;
-//        }
-//    }
-//    return false;
-//}
+void Virus::update() {
+    if(merge_count++ < 1000) {
+        for(auto e : cells) {
+            for(auto o : cells) {
+                if(e == o) {
+                    continue;
+                }
+                if((e->position - o->position).scalar() < e->getRadius() + o->getRadius()) {
+                    double d = e->getRadius() + o->getRadius() - (e->position - o->position).scalar();
+                    e->position += (e->position - o->position).unit() * d/2;
+                    o->position += (o->position - e->position).unit() * d/2;
+                }
+            }
+        }
+        return;
+    }
 
-//void Virus::eat(Cell* cell) {
-//    for(auto e : cells) {
-//        
-//    }
-//}
+    for(auto e : cells) {
+        e->accelerate = { 0, 0 };
+    }
+
+    std::list<Cell*>::iterator iter = cells.begin();
+    for(int i=0; i<cells.size(); ++i) {
+        std::list<Cell*>::iterator next = iter;
+        next++;
+
+        std::list<Cell*>::iterator other_iter = cells.begin();
+        for(int k=0; k<cells.size(); ++k) {
+            if(iter == other_iter) {
+                other_iter++;
+                continue;
+            }
+
+            if((*other_iter)->collideWith(*iter)) {
+                if((*other_iter)->getRadius() >= (*iter)->getRadius()) {
+                    (*other_iter)->eat(*iter);
+                    delete *iter;
+                    cells.erase(iter);
+                }
+                break;
+            }
+
+            other_iter++;
+        }
+
+        iter = next;
+    }
+}
+
 
 void Virus::growUp() {
     for(auto e : cells) {
@@ -53,13 +88,6 @@ void Virus::growUp() {
 }
 
 Point Virus::getCenterPoint() const {
-    // 위치들의 평균?
-    // 아무것도 없으면..?
-    // 아무것도 없지 않도록 해야함.
-    // 게임 오버 판정은 남은 셀이 1개이고, 그놈이 먹혔다고 판정이 될때.
-    // 남은 한놈은 먹혀도 없어지지 않음.
-    // 근데, 이건 플레이어 기준이고,
-    // 적은 먹히면 그냥 없어짐.
     Point center { 0, 0 };
     for(auto e : cells) {
         center.x += e->position.x;
@@ -79,8 +107,8 @@ double Virus::getRadius() const {
         }
     }
     for(auto e : cells) {
-        if((e->position - p).scalar() > max) {
-            max = (e->position - p).scalar();
+        if((e->position - p).scalar() + e->getRadius() > max) {
+            max = (e->position - p).scalar() + e->getRadius();
         }
     }
     return max;
@@ -88,7 +116,6 @@ double Virus::getRadius() const {
 
 
 double Virus::getSize() const {
-    // 굳이 파이를 곱할 필요는 없음.
     double result = 0;
     for(auto e : cells) {
         result += pow(e->getRadius(), 2);
@@ -98,6 +125,7 @@ double Virus::getSize() const {
 
 
 void Virus::split() {
+    merge_count = 0;
     int size = cells.size();
     std::list<Cell*>::iterator iter = cells.begin();
     for(int i=0; i<size; i++) {

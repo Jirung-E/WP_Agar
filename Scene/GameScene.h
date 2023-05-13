@@ -5,6 +5,7 @@
 #include "../Cell/Cell.h"
 #include "../Cell/Feed/Feed.h"
 #include "../Cell/EnemyCell/EnemyCell.h"
+#include "../Cell/Trap/Trap.h"
 #include "../Cell/Virus.h"
 
 #include <list>
@@ -22,6 +23,7 @@ private:
     Map map;
     Virus player;
     std::list<EnemyCell*> enemies;
+    std::list<Trap*> traps;
     std::list<Feed*> feeds;
     Button resume_button;
     Button quit_button;
@@ -67,6 +69,7 @@ public:
 
     void randomGenFeed();
     void randomGenEnemy();
+    void randomGenTrap();
 
     ButtonID clickL(const POINT& point);
     ButtonID clickR(const POINT& point);

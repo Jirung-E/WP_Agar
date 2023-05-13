@@ -5,7 +5,7 @@ const double Cell::min_radius = 0.3;
 const double Cell::max_radius = 5;
 
 Cell::Cell(const Point& position, const double radius) : Object { position }, radius { radius }, color { White }, 
-target_radius { radius }, prev_radius { radius }, trans_count { 0 } {
+target_radius { radius }, prev_radius { radius }, trans_count { 0 }, accel_count { 0 } {
 
 }
 
@@ -15,6 +15,7 @@ void Cell::setUp() {
     target_radius = radius;
     prev_radius = radius;
     trans_count = 0;
+    accel_count = 0;
     velocity = { 0, 0 };
 }
 
@@ -61,23 +62,23 @@ void Cell::move(const Vector& vector, const Map& map) {
 }
 
 void Cell::move(const Map& map) {
+    if(accel_count < 15) {
+        accel_count++;
+        velocity += accelerate;
+    }
     position += velocity / 10 / (0.7+radius);
 
     if(position.x - radius <= 0) {
         position.x = radius;
-        //velocity.x = 0;
     }
     else if(position.x + radius >= map.getWidth()) {
         position.x = map.getWidth() - radius;
-        //velocity.x = 0;
     }
     if(position.y - radius <= 0) {
         position.y = radius;
-        //velocity.y = 0;
     }
     else if(position.y + radius >= map.getHeight()) {
         position.y = map.getHeight() - radius;
-        //velocity.y = 0;
     }
 }
 
@@ -123,8 +124,8 @@ Cell* Cell::spit() {
         return nullptr;
     }
 
-    target_radius = sqrt(pow(target_radius, 2) - pow(min_radius/1.5, 2));
-    prev_radius = radius;
+    //target_radius = sqrt(pow(target_radius, 2) - pow(min_radius/1.5, 2));
+    //prev_radius = radius;
     trans_count = 0;
 
     Cell* cell = new Cell { position + velocity.unit()*(radius + min_radius/2), min_radius/1.5 };
@@ -143,7 +144,7 @@ Cell* Cell::split() {
     trans_count = 0;
 
     Cell* cell = new Cell { position + velocity.unit(), target_radius };
-    cell->accelerate = velocity.unit()/10;
+    cell->accelerate = velocity.unit();
     cell->color = color;
     return cell;
 }

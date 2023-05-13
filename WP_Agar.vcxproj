@@ -131,6 +131,7 @@
     <ClCompile Include="Cell\Cell.cpp" />
     <ClCompile Include="Cell\EnemyCell\EnemyCell.cpp" />
     <ClCompile Include="Cell\Feed\Feed.cpp" />
+    <ClCompile Include="Cell\Trap\Trap.cpp" />
     <ClCompile Include="Cell\Virus.cpp" />
     <ClCompile Include="Engine\Object\Object.cpp" />
     <ClCompile Include="Engine\Point\Point.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Cell\Cell.h" />
     <ClInclude Include="Cell\EnemyCell\EnemyCell.h" />
     <ClInclude Include="Cell\Feed\Feed.h" />
+    <ClInclude Include="Cell\Trap\Trap.h" />
     <ClInclude Include="Cell\Virus.h" />
     <ClInclude Include="Engine\Object\Object.h" />
     <ClInclude Include="Engine\Point\Point.h" />
