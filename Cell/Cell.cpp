@@ -144,6 +144,6 @@ Cell* Cell::split() {
 
     Cell* cell = new Cell { position + velocity.unit(), target_radius };
     cell->accelerate = velocity.unit()/10;
-    //cell->color = color;
+    cell->color = color;
     return cell;
 }
