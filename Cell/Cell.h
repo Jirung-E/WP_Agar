@@ -8,8 +8,8 @@
 class Cell : public Object {
 public:
     COLORREF color;
-    const double max_radius;
-    const double min_radius;
+    static const double max_radius;
+    static const double min_radius;
 
 protected:
     double radius;
@@ -37,4 +37,5 @@ public:
     double getRadius() const;
 
     Cell* spit();
+    Cell* split();
 };

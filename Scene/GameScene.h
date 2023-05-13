@@ -5,6 +5,7 @@
 #include "../Cell/Cell.h"
 #include "../Cell/Feed/Feed.h"
 #include "../Cell/EnemyCell/EnemyCell.h"
+#include "../Cell/Virus.h"
 
 #include <list>
 #include <ctime>
@@ -19,7 +20,7 @@ public:
 
 private:
     Map map;
-    Cell player;
+    Virus player;
     std::list<EnemyCell*> enemies;
     std::list<Feed*> feeds;
     Button resume_button;

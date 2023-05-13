@@ -26,8 +26,11 @@ play_time { 0 }, start_time { clock() }, end_time { clock() } {
 
 
 void GameScene::setUp() {
-    player.position = { map.getWidth()/2.0, map.getHeight()/2.0 };
-    player.setUp();
+    player.cells.clear();
+    player.cells.push_back(new Cell { Point { map.getWidth()/2.0, map.getHeight()/2.0 } });
+    player.cells.front()->color = player.color;
+    //player.cells.front()->position = { map.getWidth()/2.0, map.getHeight()/2.0 };
+    //player.setUp();
     feeds.clear();
     enemies.clear();
     paused = false;
@@ -71,18 +74,20 @@ void GameScene::resume() {
 
 
 void GameScene::updatePlayer(const POINT& point) {
-    POINT p;
-    switch(cam_mode) {
-    case Fixed:
-        p = player.absolutePosition(map, valid_area);
-        break;
-    case Dynamic:
-        p = { (valid_area.left + valid_area.right)/2, (valid_area.top + valid_area.bottom)/2 };
-        break;
+    for(auto e : player.cells) {
+        POINT p;
+        switch(cam_mode) {
+        case Fixed:
+            p = e->absolutePosition(map, valid_area);
+            break;
+        case Dynamic:
+            p = { (valid_area.left + valid_area.right)/2, (valid_area.top + valid_area.bottom)/2 };
+            break;
+        }
+        Vector v = (Point { (double)point.x, (double)point.y } - Point { (double)p.x, (double)p.y }) / 50;
+        e->move(v, map);
+        e->growUp();
     }
-    Vector v = (Point { (double)point.x, (double)point.y } - Point { (double)p.x, (double)p.y }) / 50;
-    player.move(v, map);
-    player.growUp();
 }
 
 void GameScene::updateEnemy() {
@@ -96,8 +101,10 @@ void GameScene::updateEnemy() {
 
         // 범위 안의 적을 다 구함
         if(!game_over) {
-            if((player.position - e->position).scalar() - player.getRadius() - e->getRadius() <= range) {
-                detected_cells.push_back(&player);
+            for(auto p : player.cells) {
+                if((p->position - e->position).scalar() - p->getRadius() - e->getRadius() <= range) {
+                    detected_cells.push_back(p);
+                }
             }
         }
         for(auto& o : enemies) {
@@ -185,10 +192,13 @@ void GameScene::playerCollisionCheck() {
     for(int i=0; i<feeds.size(); ++i) {
         std::list<Feed*>::iterator next = feed_iter;
         next++;
-        if(player.collideWith(*feed_iter)) {
-            player.eat(*feed_iter);
-            delete* feed_iter;
-            feeds.erase(feed_iter);
+        for(auto e : player.cells) {
+            if(e->collideWith(*feed_iter)) {
+                e->eat(*feed_iter);
+                delete* feed_iter;
+                feeds.erase(feed_iter);
+                break;
+            }
         }
         feed_iter = next;
     }
@@ -198,18 +208,35 @@ void GameScene::playerCollisionCheck() {
     for(int i=0; i<enemies.size(); ++i) {
         std::list<EnemyCell*>::iterator next = e_iter;
         next++;
-        if(player.collideWith(*e_iter)) {
-            if(player.getRadius() > (*e_iter)->getRadius()) {
-                player.eat(*e_iter);
-                delete* e_iter;
-                enemies.erase(e_iter);
+
+        std::list<Cell*>::iterator p_iter = player.cells.begin();
+        for(int i=0; i<player.cells.size(); ++i) {
+            std::list<Cell*>::iterator p_next = p_iter;
+            p_next++;
+
+            if((*p_iter)->collideWith(*e_iter)) {
+                if((*p_iter)->getRadius() >(*e_iter)->getRadius()) {
+                    (*p_iter)->eat(*e_iter);
+                    delete *e_iter;
+                    enemies.erase(e_iter);
+                }
+                else if((*p_iter)->getRadius() < (*e_iter)->getRadius()) {
+                    (*e_iter)->eat(*p_iter);
+                    if(player.cells.size() > 1) {
+                        delete *p_iter;
+                        player.cells.erase(p_iter);
+                    }
+                    else {
+                        // 게임오버
+                        game_over = true;
+                    }
+                }
+                break;
             }
-            else if(player.getRadius() < (*e_iter)->getRadius()) {
-                // 게임오버
-                game_over = true;
-                (*e_iter)->eat(&player);
-            }
+
+            p_iter = p_next;
         }
+
         e_iter = next;
     }
 }
@@ -293,22 +320,24 @@ void GameScene::draw(const HDC& hdc) const {
 
     // 플레이어 이동방향
     if(!game_over) {
-        Vector v = player.velocity * (view_area.right-view_area.left)/map.getWidth() * player.getRadius()*2;
-        if(v.scalar() != 0) {
-            HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * player.getRadius() / 3, LightGray);
-            HPEN old = (HPEN)SelectObject(hdc, pen);
+        for(auto e : player.cells) {
+            Vector v = e->velocity * (view_area.right-view_area.left)/map.getWidth() * e->getRadius()*2;
+            if(v.scalar() != 0) {
+                HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * e->getRadius() / 3, LightGray);
+                HPEN old = (HPEN)SelectObject(hdc, pen);
 
-            POINT p = player.absolutePosition(map, view_area);
-            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-            Vector v1 = { -v.x/3, -v.y/3 };
-            double th = atan(v.y/v.x);
-            if(v.x < 0) th += M_PI;
-            LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
-            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-            LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
+                POINT p = e->absolutePosition(map, view_area);
+                MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+                Vector v1 = { -v.x/3, -v.y/3 };
+                double th = atan(v.y/v.x);
+                if(v.x < 0) th += M_PI;
+                LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
+                MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+                LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
 
-            SelectObject(hdc, old);
-            DeleteObject(pen);
+                SelectObject(hdc, old);
+                DeleteObject(pen);
+            }
         }
     }
 
@@ -331,14 +360,14 @@ RECT GameScene::getViewArea() const {
     case Dynamic:
         {
             // 보이는 영역의 크기 설정
-            double r0 = player.min_radius;
-            double rm = player.max_radius;
-            double w = horizontal_length/map.getWidth() * (-(2*rm-15*r0) / pow(r0-rm, 2) * pow(player.getRadius() - rm, 2) + 2*rm);
+            double r0 = Cell::min_radius;
+            double rm = Cell::max_radius;
+            double w = horizontal_length/map.getWidth() * (-(4*rm-20*r0) / pow(r0-rm, 2) * pow(player.getRadius() - rm, 2) + 4*rm);
             double W = valid_area.left + horizontal_length/2;
             double p = W*(W/w - 1);
 
             // 플레이어가 중앙에 오도록 평행이동
-            Point pp = player.position;
+            Point pp = player.getCenterPoint();
             pp += Vector { -map.getWidth()/2.0, -map.getHeight()/2.0 };
             double px = W/w * horizontal_length/map.getWidth() * pp.x;
             double py = W/w * horizontal_length/map.getWidth() * pp.y;
@@ -366,8 +395,8 @@ void GameScene::drawScore(const HDC& hdc) const {
     tstring text;
     std::basic_stringstream<TCHAR> ss;
 
-    // 반지름 출력
-    ss << L"Size: " << player.getRadius() * 10;
+    // 크기 출력
+    ss << L"Size: " << player.getSize() * 10;
     text = ss.str();
     //TextOut(hdc, 2, 2, text.c_str(), text.length());
     score.text = ss.str();
@@ -401,8 +430,8 @@ void GameScene::drawGameOverScene(const HDC& hdc) const {
     tstring text;
     std::basic_stringstream<TCHAR> ss;
 
-    // 반지름 출력
-    ss << L"Size: " << player.getRadius() * 10;
+    // 크기 출력
+    ss << L"Size: " << player.getSize() * 10;
     text = ss.str();
     score.text = ss.str();
     score.show(hdc, valid_area);
@@ -485,7 +514,7 @@ ButtonID GameScene::clickL(const POINT& point) {
     }
 
     // 분열
-    //player.spit();
+    player.split();
 
     return None;
 }
@@ -498,14 +527,16 @@ ButtonID GameScene::clickR(const POINT& point) {
         return None;
     }
 
-    Cell* c = player.spit();
-    if(c != nullptr) {
-        Feed* f = new Feed { c->position, c->getRadius() };
-        f->color = c->color;
-        f->position = c->position;
-        f->velocity = c->velocity;
-        feeds.push_back(f);
-        delete c;
+    for(auto e : player.cells) {
+        Cell* c = e->spit();
+        if(c != nullptr) {
+            Feed* f = new Feed { c->position, c->getRadius() };
+            f->color = c->color;
+            f->position = c->position;
+            f->velocity = c->velocity;
+            feeds.push_back(f);
+            delete c;
+        }
     }
 
     return None;

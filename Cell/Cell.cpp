@@ -1,8 +1,11 @@
 #include "Cell.h"
 
 
+const double Cell::min_radius = 0.3;
+const double Cell::max_radius = 5;
+
 Cell::Cell(const Point& position, const double radius) : Object { position }, radius { radius }, color { White }, 
-target_radius { radius }, prev_radius { radius }, trans_count { 0 }, max_radius { 5 }, min_radius { 0.3 } {
+target_radius { radius }, prev_radius { radius }, trans_count { 0 } {
 
 }
 
@@ -124,9 +127,23 @@ Cell* Cell::spit() {
     prev_radius = radius;
     trans_count = 0;
 
-    Cell* cell = new Cell { position + velocity.unit()*(radius + min_radius/2) };
-    cell->radius = min_radius/1.5;
+    Cell* cell = new Cell { position + velocity.unit()*(radius + min_radius/2), min_radius/1.5 };
     cell->velocity = velocity.unit();
     cell->color = color;
+    return cell;
+}
+
+Cell* Cell::split() {
+    if(radius <= min_radius*2) {
+        return nullptr;
+    }
+
+    target_radius = target_radius/sqrt(2.0);
+    prev_radius = radius;
+    trans_count = 0;
+
+    Cell* cell = new Cell { position + velocity.unit(), target_radius };
+    cell->accelerate = velocity.unit()/10;
+    //cell->color = color;
     return cell;
 }

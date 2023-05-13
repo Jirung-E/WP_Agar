@@ -105,6 +105,9 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cell\Virus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TODOLIST.md" />
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="TextBox\TextBox.h">
       <Filter>GUI\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell\Virus.h">
+      <Filter>Cell</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
