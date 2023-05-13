@@ -57,6 +57,7 @@ private:
     void collisionCheck();
     void playerCollisionCheck();
     void enemyCollisionCheck();
+    void trapCollisionCheck();
 
 protected:
     void draw(const HDC& hdc) const;

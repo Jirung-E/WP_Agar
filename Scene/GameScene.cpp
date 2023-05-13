@@ -115,17 +115,24 @@ void GameScene::updateEnemy() {
         // 가장 가까운 적 셀이 나보다 크면 도망
         if(!game_over) {
             for(auto p : player.cells) {
-                if((p->position - e->position).scalar() - p->getRadius() - e->getRadius() <= range) {
-                    detected_cells.push_back(p);
+                for(auto o : e->cells) {
+                    if((p->position - o->position).scalar() - p->getRadius() - e->getRadius() <= range) {
+                        detected_cells.push_back(p);
+                    }
                 }
             }
         }
+
         for(auto& o : enemies) {
             if(e == o) {
                 continue;
             }
-            if((o->position - e->position).scalar() - o->getRadius() - e->getRadius() <= range) {
-                detected_cells.push_back(o);
+            for(auto e_elem : e->cells) {
+                for(auto o_elem : o->cells) {
+                    if((o_elem->position - e_elem->position).scalar() - o_elem->getRadius() - e_elem->getRadius() <= range) {
+                        detected_cells.push_back(o_elem);
+                    }
+                }
             }
         }
 
@@ -134,31 +141,34 @@ void GameScene::updateEnemy() {
         Vector dir = { 0, 0 };
         Cell* target = nullptr;
         double max_r = 0;
-        for(auto o : detected_cells) {
-            Vector to_me = e->position - o->position;
-            double dist = to_me.scalar() - e->getRadius() - o->getRadius();
-            if(o->getRadius() >= e->getRadius()) {
-                // 도망갈준비
-                dir += to_me.unit() / (to_me.scalar() + dist);
-                e->running = true;
-            }
-            else {
-                // 쫒아갈준비
-                if(dist <= detect_range) {
-                    if(o->getRadius() > max_r) {
-                        max_r = o->getRadius();
-                        target = o;
-                        e->chasing = true;
+        for(auto e_elem : e->cells) {
+            for(auto o : detected_cells) {
+                Vector to_me = e_elem->position - o->position;
+                double dist = to_me.scalar() - e_elem->getRadius() - o->getRadius();
+                if(o->getRadius() >= e_elem->getRadius()) {
+                    // 도망갈준비
+                    dir += to_me.unit() / (to_me.scalar() + dist);
+                    e->running = true;
+                }
+                else {
+                    // 쫒아갈준비
+                    if(dist <= detect_range) {
+                        if(o->getRadius() > max_r) {
+                            max_r = o->getRadius();
+                            target = o;
+                            e->chasing = true;
+                        }
                     }
                 }
             }
         }
+
         if(e->running) {
             e->move(dir.unit(), map);
             continue;
         }
         if(e->chasing) {
-            e->move((target->position - e->position).unit(), map);
+            e->move((target->position - e->getCenterPoint()).unit(), map);          // 이거 이렇게 하면 안되고 셀 각각이 쫒는 식으로 해야 애들이 뭉침
             continue;
         }
 
@@ -166,7 +176,7 @@ void GameScene::updateEnemy() {
         Vector to_feed = { 0, 0 };
         double min_dist = 10000000;
         for(auto o : feeds) {
-            Vector v = o->position - e->position;
+            Vector v = o->position - e->getCenterPoint();       // 여기도
             if(v.scalar() < min_dist) {
                 min_dist = v.scalar();
                 to_feed = v;
@@ -203,6 +213,7 @@ void GameScene::collisionCheck() {
         playerCollisionCheck();
     }
     enemyCollisionCheck();
+    trapCollisionCheck();
 }
 
 void GameScene::playerCollisionCheck() {
@@ -299,27 +310,26 @@ void GameScene::enemyCollisionCheck() {
                 continue;
             }
             bool other_iter_deleted = false;
-            if((*e_iter)->collideWith(*other_iter)) {
-                if((*e_iter)->getRadius() > (*other_iter)->getRadius()) {
-                    std::list<EnemyCell*>::iterator other_next = other_iter;
-                    other_next++;
-                    (*e_iter)->eat(*other_iter);
-                    delete* other_iter;
-                    enemies.erase(other_iter);
-                    other_iter = other_next;
-                    other_iter_deleted = true;
-                }
-                else if((*e_iter)->getRadius() < (*other_iter)->getRadius()) {
-                    std::list<EnemyCell*>::iterator e_next = e_iter;
-                    e_next++;
-                    (*other_iter)->eat(*e_iter);
-                    delete* e_iter;
-                    enemies.erase(e_iter);
-                    e_iter = e_next;
-                    e_iter_deleted = true;
-                    break;
-                }
+            (*e_iter)->collideWith(*other_iter);
+
+            if((*other_iter)->cells.empty()) {
+                std::list<EnemyCell*>::iterator other_next = other_iter;
+                other_next++;
+                delete* other_iter;
+                enemies.erase(other_iter);
+                other_iter = other_next;
+                other_iter_deleted = true;
             }
+            else if((*e_iter)->cells.empty()) {
+                std::list<EnemyCell*>::iterator e_next = e_iter;
+                e_next++;
+                delete* e_iter;
+                enemies.erase(e_iter);
+                e_iter = e_next;
+                e_iter_deleted = true;
+                break;
+            }
+
             if(!other_iter_deleted) {
                 other_iter++;
             }
@@ -329,6 +339,50 @@ void GameScene::enemyCollisionCheck() {
             e_iter++;
         }
         e_iter_deleted = false;
+    }
+}
+
+void GameScene::trapCollisionCheck() {
+    std::list<Trap*>::iterator iter = traps.begin();
+    for(int i=0; i<traps.size(); ++i) {
+        std::list<Trap*>::iterator next = iter;
+        next++;
+
+        bool erased = false;
+        for(auto p : player.cells) {
+            if((*iter)->collideWith(p)) {
+                Cell* c = p->split();
+                if(c != nullptr) {
+                    player.cells.push_back(c);
+                    erased = true;
+                    break;
+                }
+            }
+        }
+        if(!erased) {
+            for(auto e : enemies) {
+                for(auto e_elem : e->cells) {
+                    if((*iter)->collideWith(e_elem)) {
+                        Cell* c = e_elem->split();
+                        if(c != nullptr) {
+                            e->cells.push_back(c);
+                            erased = true;
+                            break;
+                        }
+                    }
+                }
+                if(erased) {
+                    break;
+                }
+            }
+        }
+
+        if(erased) {
+            delete *iter;
+            traps.erase(iter);
+        }
+
+        iter = next;
     }
 }
 
