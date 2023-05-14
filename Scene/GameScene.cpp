@@ -110,6 +110,7 @@ void GameScene::updateEnemy() {
         double range = e->running ? running_range : detect_range;
 
         // 영역 안에 들어온 적 찾기
+        // 플레이어 찾기
         if(!game_over) {
             for(auto p : player.cells) {
                 for(auto o : e->cells) {
@@ -120,6 +121,7 @@ void GameScene::updateEnemy() {
             }
         }
 
+        // 다른 적 찾기
         for(auto& o : enemies) {
             if(e == o) {
                 continue;
@@ -128,6 +130,17 @@ void GameScene::updateEnemy() {
                 for(auto o_elem : o->cells) {
                     if((o_elem->position - e_elem->position).scalar() - o_elem->getRadius() - e_elem->getRadius() <= range) {
                         detected_cells.push_back(o_elem);
+                    }
+                }
+            }
+        }
+
+        // 트랩 찾기
+        for(auto e_elem : e->cells) {
+            for(auto t : traps) {
+                if(e_elem->getRadius() > t->getRadius()) {
+                    if((t->position - e_elem->position).scalar() - t->getRadius() - e_elem->getRadius() <= range/10) {
+                        detected_cells.push_back(t);
                     }
                 }
             }
@@ -142,7 +155,7 @@ void GameScene::updateEnemy() {
             for(auto o : detected_cells) {
                 Vector to_me = e_elem->position - o->position;
                 double dist = to_me.scalar() - e_elem->getRadius() - o->getRadius();
-                if(o->getRadius() >= e_elem->getRadius()) {
+                if(o->getRadius() >= e_elem->getRadius() || o->isInvincible()) {
                     // 도망갈준비
                     dir += to_me.unit() / (to_me.scalar() + dist);
                     e->running = true;
@@ -468,7 +481,7 @@ void GameScene::draw(const HDC& hdc) const {
         drawPauseScene(hdc);
     }
     else if(game_over) {
-        drawGameOverScene(hdc);
+        //drawGameOverScene(hdc);
     }
 }
 

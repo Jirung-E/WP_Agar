@@ -1,7 +1,7 @@
 #include "Virus.h"
 
 
-const int merge_count_max = 500;
+const int Virus::merge_count_max = 500;
 
 Virus::Virus(const Point& position) : color { White }, merge_count { 0 } {
     cells.push_back(new Cell { position });

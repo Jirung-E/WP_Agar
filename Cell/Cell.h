@@ -19,6 +19,7 @@ protected:
     double prev_radius;
     int trans_count;
     int accel_count;
+    bool invincible;
 
 public:
     Cell(const Point& position, const double radius = 0.3);
@@ -43,4 +44,6 @@ public:
     Cell* spit();
     Cell* split();
     std::list<Cell*> explode();
+
+    bool isInvincible() const;
 };
