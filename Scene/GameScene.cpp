@@ -38,6 +38,7 @@ void GameScene::setUp() {
     start_time = clock();
     end_time = clock();
     feed_erase_count = 0;
+    traps.clear();
 
     randomGenFeed();
     randomGenFeed();
@@ -157,7 +158,12 @@ void GameScene::updateEnemy() {
                 double dist = to_me.scalar() - e_elem->getRadius() - o->getRadius();
                 if(o->getRadius() >= e_elem->getRadius() || o->isInvincible()) {
                     // µµ¸Á°¥ÁØºñ
-                    dir += to_me.unit() / (to_me.scalar() + dist);
+                    if(o->isInvincible()) {
+                        dir += to_me.unit() / (to_me.scalar() + dist) / 10;
+                    }
+                    else {
+                        dir += to_me.unit() / (to_me.scalar() + dist);
+                    }
                     e->running = true;
                 }
                 else {

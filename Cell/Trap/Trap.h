@@ -7,8 +7,9 @@ class Trap : public Cell {
 private:
     int stroll_count;
 
-public:
+private:
     int spawn_animation_count;
+    const int anim_max;
 
 public:
     Trap(const Point& position);
