@@ -109,10 +109,11 @@ void GameScene::updateEnemy() {
         const double detect_range = 1.5;
         double range = e->running ? running_range : detect_range;
 
+        // 영역 안에 들어온 적 찾기
         if(!game_over) {
             for(auto p : player.cells) {
                 for(auto o : e->cells) {
-                    if((p->position - o->position).scalar() - p->getRadius() - e->getRadius() <= range) {
+                    if((p->position - o->position).scalar() - p->getRadius() - o->getRadius() <= range) {
                         detected_cells.push_back(p);
                     }
                 }
@@ -287,6 +288,7 @@ void GameScene::enemyCollisionCheck() {
     for(auto e : enemies) {
         e->update();
     }
+
     // 적이 먹이를 먹음
     //std::list<Feed*>::iterator feed_iter = feeds.begin();
     for(auto& e : enemies) {
@@ -361,7 +363,14 @@ void GameScene::trapCollisionCheck() {
                     for(auto f : frag) {
                         player.cells.push_back(f);
                     }
-                    player.merge_count = 0;
+                    if(player.merge_count > Virus::merge_count_max/10*9) {
+                        if(player.merge_count >= Virus::merge_count_max) {
+                            player.merge_count = 0;
+                        }
+                        else {
+                            player.merge_count = Virus::merge_count_max/10*9;
+                        }
+                    }
                     erased = true;
                     break;
                 }
@@ -376,7 +385,14 @@ void GameScene::trapCollisionCheck() {
                             for(auto f : frag) {
                                 e->cells.push_back(f);
                             }
-                            e->merge_count = 0;
+                            if(e->merge_count > Virus::merge_count_max/10*9) {
+                                if(e->merge_count >= Virus::merge_count_max) {
+                                    e->merge_count = 0;
+                                }
+                                else {
+                                    e->merge_count = Virus::merge_count_max/10*9;
+                                }
+                            }
                             erased = true;
                             break;
                         }
@@ -536,17 +552,17 @@ void GameScene::drawGameOverScene(const HDC& hdc) const {
     std::basic_stringstream<TCHAR> ss;
 
     // 크기 출력
-    ss << L"Size: " << player.getSize() * 10;
-    text = ss.str();
-    score.text = ss.str();
-    score.show(hdc, valid_area);
-    ss.str(L"");
+    //ss << L"Size: " << player.getSize() * 10;
+    //text = ss.str();
+    //score.text = ss.str();
+    //score.show(hdc, valid_area);
+    //ss.str(L"");
 
     // 플레이 시간 출력
     ss << L"PlayTime: " << play_time/1000 << "\"";
     text = ss.str();
     score.text = ss.str();
-    score.position.y += 7;
+    //score.position.y += 7;
     score.show(hdc, valid_area);
     ss.str(L"");
 }

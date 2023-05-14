@@ -162,7 +162,7 @@ void GameManager::gameStart(const HWND& hWnd) {
 
 	SetTimer(hWnd, GenerateFeeds, 2000, NULL);
 	SetTimer(hWnd, GenerateEnemy, 5000, NULL);
-	SetTimer(hWnd, GenerateTrap, 15000, NULL);
+	SetTimer(hWnd, GenerateTrap, 3000, NULL);
 }
 
 void GameManager::lockUpCursor(const HWND& hWnd) {

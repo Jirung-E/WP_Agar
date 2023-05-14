@@ -1,6 +1,8 @@
 #include "Virus.h"
 
 
+const int merge_count_max = 500;
+
 Virus::Virus(const Point& position) : color { White }, merge_count { 0 } {
     cells.push_back(new Cell { position });
 }
@@ -32,7 +34,7 @@ void Virus::move(const Map& map) {
 }
 
 void Virus::update() {
-    if(merge_count++ < 1000) {
+    if(merge_count++ < merge_count_max) {
         for(auto e : cells) {
             for(auto o : cells) {
                 if(e == o) {

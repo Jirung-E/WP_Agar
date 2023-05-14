@@ -1,7 +1,7 @@
 #include "Trap.h"
 
 
-Trap::Trap(const Point& position) : Cell { position, 0.5 }, stroll_count { 0 } {
+Trap::Trap(const Point& position) : Cell { position, 0.5 }, stroll_count { 0 }, spawn_animation_count { 0 } {
     color = getRandomColor(0, 0, 0, Range { 100, 200 });
 }
 

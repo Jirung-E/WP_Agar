@@ -8,6 +8,9 @@ private:
     int stroll_count;
 
 public:
+    int spawn_animation_count;
+
+public:
     Trap(const Point& position);
 
 public:

@@ -8,6 +8,7 @@
 class Virus {
 //private:
 public:
+    static const int merge_count_max;
     int merge_count;
 
 public:
