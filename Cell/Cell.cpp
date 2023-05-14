@@ -155,7 +155,7 @@ Cell* Cell::split() {
     prev_radius = radius;
 
     Cell* cell = new Cell { position, target_radius };
-    cell->accelerate = velocity.unit();
+    cell->accelerate = velocity.unit()*radius;
     cell->color = color;
     return cell;
 }
@@ -167,14 +167,15 @@ std::list<Cell*> Cell::explode() {
     radius = target_radius;
     prev_radius = radius;
 
-    accelerate = { 0, -1 };
+    accelerate = { 0, -1*radius*3 };
     accel_count = 0;
     
     int frag_num = 6;
 
     for(int i=1; i<frag_num; ++i) {
-        Cell* cell = new Cell { position, target_radius };
-        cell->accelerate = { cos(-M_PI/2 + i*(2*M_PI)/frag_num), sin(-M_PI/2 + i*(2*M_PI)/frag_num) };
+        Vector dir = { cos(-M_PI/2 + i*(2*M_PI)/frag_num), sin(-M_PI/2 + i*(2*M_PI)/frag_num) };
+        Cell* cell = new Cell { position + dir, target_radius };
+        cell->accelerate = dir*radius*3;
         cell->color = color;
         frag.push_back(cell);
     }

@@ -469,6 +469,8 @@ void GameScene::draw(const HDC& hdc) const {
                 HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * e->getRadius() / 3, LightGray);
                 HPEN old = (HPEN)SelectObject(hdc, pen);
 
+                SetROP2(hdc, R2_MASKPEN);
+
                 POINT p = e->absolutePosition(map, view_area);
                 MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
                 Vector v1 = { -v.x/3, -v.y/3 };
@@ -477,6 +479,8 @@ void GameScene::draw(const HDC& hdc) const {
                 LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
                 MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
                 LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
+
+                SetROP2(hdc, R2_COPYPEN);
 
                 SelectObject(hdc, old);
                 DeleteObject(pen);
