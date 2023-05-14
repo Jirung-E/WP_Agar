@@ -116,7 +116,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TODOLIST.md" />
     <None Include="이주형.md" />
   </ItemGroup>
   <ItemGroup>

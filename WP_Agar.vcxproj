@@ -146,7 +146,6 @@
     <ClCompile Include="Util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TODOLIST.md" />
     <None Include="이주형.md" />
   </ItemGroup>
   <ItemGroup>
