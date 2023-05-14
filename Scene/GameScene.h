@@ -46,6 +46,7 @@ public:
     void setUp();
     void update(const POINT& point);
 
+    void togglePauseState();
     void pause();
     void resume();
 

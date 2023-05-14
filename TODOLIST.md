@@ -16,11 +16,3 @@ else {
     }
 }
 ```
-증가하는 반지름:
-```cpp
-sqrt(pow(player.getRadius(), 2) + pow((*iter)->getRadius(), 6)) - player.getRadius()
-```
-증가함수:
-```cpp
-radius = -(target_radius-prev_radius)*pow(trans_count++/30.0-1, 2) + target_radius;
-```

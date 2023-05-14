@@ -40,7 +40,7 @@ void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 			quit(hWnd);
 			break;
 		case L's': case L'S':
-			game_scene.pause();
+			game_scene.togglePauseState();
 			releaseCursor();
 			break;
 		case L'1':

@@ -65,6 +65,15 @@ void GameScene::update(const POINT& point) {
     collisionCheck();
 }
 
+void GameScene::togglePauseState() {
+    if(paused) {
+        resume();
+    }
+    else {
+        pause();
+    }
+}
+
 void GameScene::pause() {
     if(!game_over) {
         paused = true;
