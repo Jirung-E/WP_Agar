@@ -38,7 +38,7 @@ public:
 
 private:
     void gameStart(const HWND& hWnd);
-    void lockUpCursor(const HWND& hWnd);
+    void lockCursor(const HWND& hWnd);
     void fixCursor(const HWND& hWnd);
     void releaseCursor();
 

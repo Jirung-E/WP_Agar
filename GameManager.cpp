@@ -71,7 +71,7 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Directi
 			break;
 		case ResumeGame:
 			game_scene.resume();
-			lockUpCursor(hWnd);
+			lockCursor(hWnd);
 			break;
 		case QuitGame:
 			quit(hWnd);
@@ -162,10 +162,10 @@ void GameManager::gameStart(const HWND& hWnd) {
 
 	SetTimer(hWnd, GenerateFeeds, 2000, NULL);
 	SetTimer(hWnd, GenerateEnemy, 5000, NULL);
-	SetTimer(hWnd, GenerateTrap, 3000, NULL);
+	SetTimer(hWnd, GenerateTrap, 4000, NULL);
 }
 
-void GameManager::lockUpCursor(const HWND& hWnd) {
+void GameManager::lockCursor(const HWND& hWnd) {
 	RECT rect;
 	GetClientRect(hWnd, &rect);
 	POINT lt = { rect.left, rect.top };
