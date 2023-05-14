@@ -38,14 +38,13 @@ void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 		switch(keycode) {
 		case VK_ESCAPE: case L'q': case L'Q':
 			quit(hWnd);
-			// gameOver()
 			break;
 		case L's': case L'S':
 			game_scene.pause();
+			releaseCursor();
 			break;
 		case L'1':
 			game_scene.setCameraMode(GameScene::CameraMode::Dynamic);
-			//fixCursor(hWnd);
 			break;
 		case L'2':
 			game_scene.setCameraMode(GameScene::CameraMode::Fixed);
@@ -89,8 +88,6 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Directi
 }
 
 void GameManager::update(const HWND& hWnd) {
-	// 버튼에 오버라이드 될시 버튼 강조, 게임시작시에는 이동
-	//syncSize(hWnd);
 	switch(current_scene->getID()) {
 	case Game:
 		game_scene.update(mouse_position);
@@ -142,6 +139,7 @@ void GameManager::timer(const HWND& hWnd, int id) {
 }
 
 void GameManager::interrupt() {
+	releaseCursor();
 	switch(current_scene->getID()) {
 	case Game:
 		game_scene.pause();
@@ -155,7 +153,6 @@ void GameManager::interrupt() {
 
 void GameManager::gameStart(const HWND& hWnd) {
 	fixCursor(hWnd);
-	//ShowCursor(false);
 
 	game_scene.setUp();
     current_scene = &game_scene;

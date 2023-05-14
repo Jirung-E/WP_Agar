@@ -40,9 +40,6 @@
     <Filter Include="Engine\Object">
       <UniqueIdentifier>{0a201f84-0a07-468d-bdb7-a4933ed12423}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Point">
-      <UniqueIdentifier>{14073bf2-8c68-410d-bb0c-be36c3cba924}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Cell\Feed">
       <UniqueIdentifier>{b8b0c943-bce5-441a-be0f-3f1cbb8e4823}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     </Filter>
     <Filter Include="Cell\Trap">
       <UniqueIdentifier>{e8211058-492a-43b8-b4df-08e28bf6d1d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Point">
+      <UniqueIdentifier>{14073bf2-8c68-410d-bb0c-be36c3cba924}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,14 +105,14 @@
     <ClCompile Include="Cell\EnemyCell\EnemyCell.cpp">
       <Filter>Cell\EnemyCell</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="Cell\Trap\Trap.cpp">
       <Filter>Cell\Trap</Filter>
     </ClCompile>
     <ClCompile Include="Cell\Virus.cpp">
       <Filter>Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,6 @@ public:
 
     void draw(const HDC& hdc, const Map& map, const RECT& valid_area);
 
-    //void move(const Vector& vector, const Map& map);
     void move(const Map& map);
 
     bool collideWith(const Cell* other);

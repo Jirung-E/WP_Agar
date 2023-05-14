@@ -88,7 +88,6 @@ void TextBox::drawText(const HDC& hdc, const RECT& valid_area) const {
     if(transparent_background) {
         SetBkMode(hdc, TRANSPARENT);
     }
-    //TextOut(hdc, center_x - size.cx/2, center_y - size.cy/2, text.c_str(), text.length());
     DrawText(hdc, text.c_str(), text.length(), &rect, align);
 
     SetTextColor(hdc, old_text_color);

@@ -93,12 +93,6 @@ RectSize& RectSize::operator-=(const RectSize& rs) {
 	return *this;
 }
 
-//RectSize& RectSize::operator=(const RectSize& other) {
-//	this->width = other.width;
-//	this->height = other.height;
-//	return *this;
-//}
-
 RectSize RectSize::expand(int percentage) const {
 	RectSize r;
 	r.width = width + width*percentage/100;

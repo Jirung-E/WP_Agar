@@ -42,7 +42,6 @@ public:
 	double height;
 
 public:
-	//RectSize operator*(double n) const;
 	RectSize& operator*=(double n);
 	RectSize& operator+=(double n);
 	RectSize& operator-=(double n);
@@ -51,7 +50,6 @@ public:
 	RectSize operator+(const RectSize& rs);
 	RectSize operator-(const RectSize& rs);
 	RectSize& operator-=(const RectSize& rs);
-	//RectSize& operator=(const RectSize& other);
 
 public:
 	RectSize expand(int percentage) const;

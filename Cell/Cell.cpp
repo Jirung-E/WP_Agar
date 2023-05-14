@@ -112,7 +112,6 @@ void Cell::merge(Cell* cell) {
 
 void Cell::eat(Cell* cell) {
     target_radius = sqrt(pow(target_radius, 2) + pow(cell->radius, 2));
-    //target_radius = cbrt(pow(target_radius, 3) + pow(cell->radius, 3));
     if(target_radius > max_radius) {
         target_radius = max_radius;
     }
@@ -154,9 +153,8 @@ Cell* Cell::split() {
     target_radius = target_radius/sqrt(2.0);
     radius = target_radius;
     prev_radius = radius;
-    //trans_count = 0;
 
-    Cell* cell = new Cell { position/* + velocity.unit()*/, target_radius };
+    Cell* cell = new Cell { position, target_radius };
     cell->accelerate = velocity.unit();
     cell->color = color;
     return cell;
@@ -168,7 +166,6 @@ std::list<Cell*> Cell::explode() {
     target_radius = target_radius/sqrt(6.0);
     radius = target_radius;
     prev_radius = radius;
-    //trans_count = 0;
 
     accelerate = { 0, -1 };
     accel_count = 0;

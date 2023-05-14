@@ -159,10 +159,10 @@ void GameScene::updateEnemy() {
                 if(o->getRadius() >= e_elem->getRadius() || o->isInvincible()) {
                     // 도망갈준비
                     if(o->isInvincible()) {
-                        dir += to_me.unit() / (to_me.scalar() + dist) / 10;
+                        dir += to_me.unit() / to_me.scalar() / 10;
                     }
                     else {
-                        dir += to_me.unit() / (to_me.scalar() + dist);
+                        dir += to_me.unit() / to_me.scalar();
                     }
                     e->running = true;
                 }
@@ -191,18 +191,15 @@ void GameScene::updateEnemy() {
         }
 
         // 먹이를 쫒아감
-        //Vector to_feed = { 0, 0 };
         target = nullptr;
         double min_dist = 10000000;
         for(auto o : feeds) {
             Vector v = o->position - e->getCenterPoint();
             if(v.scalar() < min_dist) {
                 min_dist = v.scalar();
-                //to_feed = v;
                 target = o;
             }
         }
-        //to_feed = to_feed.unit() * 10;
         if(target == nullptr) {
             e->randomStroll();
             e->move(map);
@@ -309,7 +306,6 @@ void GameScene::enemyCollisionCheck() {
     }
 
     // 적이 먹이를 먹음
-    //std::list<Feed*>::iterator feed_iter = feeds.begin();
     for(auto& e : enemies) {
         for(auto o : e->cells) {
             std::list<Feed*>::iterator feed_iter = feeds.begin();
@@ -487,7 +483,7 @@ void GameScene::draw(const HDC& hdc) const {
         drawPauseScene(hdc);
     }
     else if(game_over) {
-        //drawGameOverScene(hdc);
+        drawGameOverScene(hdc);
     }
 }
 
@@ -538,7 +534,6 @@ void GameScene::drawScore(const HDC& hdc) const {
     // 크기 출력
     ss << L"Size: " << player.getSize() * 10;
     text = ss.str();
-    //TextOut(hdc, 2, 2, text.c_str(), text.length());
     score.text = ss.str();
     score.show(hdc, valid_area);
     ss.str(L"");
@@ -546,7 +541,6 @@ void GameScene::drawScore(const HDC& hdc) const {
     // 플레이 시간 출력
     ss << L"PlayTime: " << play_time/1000 << "\"";
     text = ss.str();
-    //TextOut(hdc, 2, 18, text.c_str(), text.length());
     score.text = ss.str();
     score.position.y += 5;
     score.show(hdc, valid_area);
@@ -570,18 +564,10 @@ void GameScene::drawGameOverScene(const HDC& hdc) const {
     tstring text;
     std::basic_stringstream<TCHAR> ss;
 
-    // 크기 출력
-    //ss << L"Size: " << player.getSize() * 10;
-    //text = ss.str();
-    //score.text = ss.str();
-    //score.show(hdc, valid_area);
-    //ss.str(L"");
-
     // 플레이 시간 출력
     ss << L"PlayTime: " << play_time/1000 << "\"";
     text = ss.str();
     score.text = ss.str();
-    //score.position.y += 7;
     score.show(hdc, valid_area);
     ss.str(L"");
 }
