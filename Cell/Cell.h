@@ -4,6 +4,8 @@
 
 #include "../Map/Map.h"
 
+#include <list>
+
 
 class Cell : public Object {
 public:
@@ -32,6 +34,7 @@ public:
 
     bool collideWith(const Cell* other);
 
+    void merge(Cell* cell);
     void eat(Cell* cell);
     void growUp();
 
@@ -39,4 +42,5 @@ public:
 
     Cell* spit();
     Cell* split();
+    std::list<Cell*> explode();
 };

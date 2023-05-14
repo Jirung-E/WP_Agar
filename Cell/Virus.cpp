@@ -66,7 +66,7 @@ void Virus::update() {
 
             if((*other_iter)->collideWith(*iter)) {
                 if((*other_iter)->getRadius() >= (*iter)->getRadius()) {
-                    (*other_iter)->eat(*iter);
+                    (*other_iter)->merge(*iter);
                     delete *iter;
                     cells.erase(iter);
                 }

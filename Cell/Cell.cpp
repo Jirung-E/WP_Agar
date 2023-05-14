@@ -1,5 +1,8 @@
 #include "Cell.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 
 const double Cell::min_radius = 0.3;
 const double Cell::max_radius = 5;
@@ -62,7 +65,7 @@ void Cell::move(const Vector& vector, const Map& map) {
 }
 
 void Cell::move(const Map& map) {
-    if(accel_count < 15) {
+    if(accel_count < 20) {
         accel_count++;
         velocity += accelerate;
     }
@@ -96,6 +99,15 @@ bool Cell::collideWith(const Cell* other) {
         }
     }
     return false;
+}
+
+void Cell::merge(Cell* cell) {
+    target_radius = sqrt(pow(target_radius, 2) + pow(cell->radius, 2));
+    if(target_radius > max_radius) {
+        target_radius = max_radius;
+    }
+    radius = target_radius;
+    prev_radius = radius;
 }
 
 void Cell::eat(Cell* cell) {
@@ -140,11 +152,35 @@ Cell* Cell::split() {
     }
 
     target_radius = target_radius/sqrt(2.0);
+    radius = target_radius;
     prev_radius = radius;
-    trans_count = 0;
+    //trans_count = 0;
 
-    Cell* cell = new Cell { position + velocity.unit(), target_radius };
+    Cell* cell = new Cell { position/* + velocity.unit()*/, target_radius };
     cell->accelerate = velocity.unit();
     cell->color = color;
     return cell;
+}
+
+std::list<Cell*> Cell::explode() {
+    std::list<Cell*> frag;
+
+    target_radius = target_radius/sqrt(6.0);
+    radius = target_radius;
+    prev_radius = radius;
+    //trans_count = 0;
+
+    accelerate = { 0, -1 };
+    accel_count = 0;
+    
+    int frag_num = 6;
+
+    for(int i=1; i<frag_num; ++i) {
+        Cell* cell = new Cell { position, target_radius };
+        cell->accelerate = { cos(-M_PI/2 + i*(2*M_PI)/frag_num), sin(-M_PI/2 + i*(2*M_PI)/frag_num) };
+        cell->color = color;
+        frag.push_back(cell);
+    }
+
+    return frag;
 }

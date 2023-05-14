@@ -6,7 +6,8 @@
 
 
 class Virus {
-private:
+//private:
+public:
     int merge_count;
 
 public:

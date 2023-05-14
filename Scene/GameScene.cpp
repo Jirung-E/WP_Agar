@@ -109,10 +109,6 @@ void GameScene::updateEnemy() {
         const double detect_range = 1.5;
         double range = e->running ? running_range : detect_range;
 
-        // 범위 안의 적을 다 구함
-        // 가장 가까운 셀끼리 비교
-        // 가장 가까운 적 셀이 나보다 작으면 그곳으로
-        // 가장 가까운 적 셀이 나보다 크면 도망
         if(!game_over) {
             for(auto p : player.cells) {
                 for(auto o : e->cells) {
@@ -168,27 +164,33 @@ void GameScene::updateEnemy() {
             continue;
         }
         if(e->chasing) {
-            e->move((target->position - e->getCenterPoint()).unit(), map);          // 이거 이렇게 하면 안되고 셀 각각이 쫒는 식으로 해야 애들이 뭉침
+            for(auto e_elem : e->cells) {
+                e_elem->move((target->position - e_elem->position).unit(), map);
+            }
             continue;
         }
 
         // 먹이를 쫒아감
-        Vector to_feed = { 0, 0 };
+        //Vector to_feed = { 0, 0 };
+        target = nullptr;
         double min_dist = 10000000;
         for(auto o : feeds) {
-            Vector v = o->position - e->getCenterPoint();       // 여기도
+            Vector v = o->position - e->getCenterPoint();
             if(v.scalar() < min_dist) {
                 min_dist = v.scalar();
-                to_feed = v;
+                //to_feed = v;
+                target = o;
             }
         }
-        to_feed = to_feed.unit() * 10;
-        if(to_feed == Vector { 0, 0 }) {
+        //to_feed = to_feed.unit() * 10;
+        if(target == nullptr) {
             e->randomStroll();
             e->move(map);
         }
         else {
-            e->move(to_feed, map);
+            for(auto e_elem : e->cells) {
+                e_elem->move((target->position - e_elem->position).unit(), map);
+            }
         }
     }
 }
@@ -282,6 +284,9 @@ void GameScene::playerCollisionCheck() {
 }
 
 void GameScene::enemyCollisionCheck() {
+    for(auto e : enemies) {
+        e->update();
+    }
     // 적이 먹이를 먹음
     //std::list<Feed*>::iterator feed_iter = feeds.begin();
     for(auto& e : enemies) {
@@ -351,9 +356,12 @@ void GameScene::trapCollisionCheck() {
         bool erased = false;
         for(auto p : player.cells) {
             if((*iter)->collideWith(p)) {
-                Cell* c = p->split();
-                if(c != nullptr) {
-                    player.cells.push_back(c);
+                if((*iter)->getRadius() < p->getRadius()) {
+                    std::list<Cell*> frag = p->explode();
+                    for(auto f : frag) {
+                        player.cells.push_back(f);
+                    }
+                    player.merge_count = 0;
                     erased = true;
                     break;
                 }
@@ -363,9 +371,12 @@ void GameScene::trapCollisionCheck() {
             for(auto e : enemies) {
                 for(auto e_elem : e->cells) {
                     if((*iter)->collideWith(e_elem)) {
-                        Cell* c = e_elem->split();
-                        if(c != nullptr) {
-                            e->cells.push_back(c);
+                        if((*iter)->getRadius() < e_elem->getRadius()) {
+                            std::list<Cell*> frag = e_elem->explode();
+                            for(auto f : frag) {
+                                e->cells.push_back(f);
+                            }
+                            e->merge_count = 0;
                             erased = true;
                             break;
                         }
