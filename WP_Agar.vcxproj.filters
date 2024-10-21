@@ -116,9 +116,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="이주형.md" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -167,5 +164,8 @@
     <ClInclude Include="Cell\Trap\Trap.h">
       <Filter>Cell\Trap</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

@@ -146,9 +146,6 @@
     <ClCompile Include="Util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="이주형.md" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Button\Button.h" />
     <ClInclude Include="Cell\Cell.h" />
     <ClInclude Include="Cell\EnemyCell\EnemyCell.h" />
@@ -165,6 +162,9 @@
     <ClInclude Include="Scene\MainScene.h" />
     <ClInclude Include="TextBox\TextBox.h" />
     <ClInclude Include="Util\Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
